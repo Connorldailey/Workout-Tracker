@@ -6,6 +6,7 @@
 ## Project Desciption
 
 * coming soon
+* teck, lauges, and resoureces used
 * best shit ever
 
 
