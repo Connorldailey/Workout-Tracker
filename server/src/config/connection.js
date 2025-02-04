@@ -16,4 +16,5 @@ const db = async () => {
         throw new Error('Database connection failed.');
     }
 };
+
 export default db;
