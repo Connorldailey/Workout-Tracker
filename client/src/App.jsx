@@ -1,4 +1,3 @@
-// I stole this straight from the book search
 import './App.css';
 import {
   ApolloClient,
@@ -37,6 +36,6 @@ function App() {
       <Outlet />
     </ApolloProvider>
   );
-}
+};
 
 export default App;
