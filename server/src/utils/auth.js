@@ -28,9 +28,9 @@ export const authenticateToken = ({ req }) => {
 export const signToken = (username, email, _id) => {
     const payload = { username, email, _id };
 
-    const secretKey = process.env.JWT_SECRET_KEY || '';
+    const secretKey = process.env.JWT_SECRET_KEY;
     
-    return jwt.sign({ data: payload }, secretKey, { expiresIn: '1h' });
+    return jwt.sign({ data: payload }, secretKey, { expiresIn: '2h' });
 };
 
 export class AuthenticationError extends GraphQLError {
