@@ -27,11 +27,16 @@ const typeDefs = `
 
     type Query {
         me: User
-        exercises: [Exercise!]!
-        exercise(id: ID!): Exercise
-        searchExercises(query: String!): [Exercise!]!
+        exercisesByName(name: String!, offset: Int): [Exercise!]!
+        exercisesByBodyPart(bodyPart: String!, offset: Int): [Exercise!]!
+        exercisesByEquipment(equipment: String!, offset: Int): [Exercise!]!
+        exercisesByTarget(target: String!, offset: Int): [Exercise!]!
+        exerciseById(id: ID!): Exercise
+        randomExercises: [Exercise!]!
+        bodyPartList: [String!]!
+        equipmentList: [String!]!
+        targetList: [String!]!
     }
-
 
     type Mutation {
         login(
