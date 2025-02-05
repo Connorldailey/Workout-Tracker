@@ -4,6 +4,7 @@
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 
+
 ## Desciption
 
 * The Workout Tracker is a full-stack MERN (MongoDB, Express.js, React, Node.js) application that integrates with the Exercisedb API to provide users with a clean interface to:
