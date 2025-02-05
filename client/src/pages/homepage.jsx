@@ -1,5 +1,5 @@
 import Auth from '../utils/auth';
-import CoverPage from '../components/coverPage';
+import CoverPage from '../components/CoverPage';
 
 const Homepage = () => {
     return (
