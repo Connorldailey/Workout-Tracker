@@ -5,7 +5,9 @@ const Homepage = () => {
     return (
         <>
             {Auth.loggedIn() ? (
-                <p>Logged In</p>
+                <>
+                    <HomePanel />
+                </>
             ) : (
                 <>
                     <CoverPage />
