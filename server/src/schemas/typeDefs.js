@@ -16,9 +16,22 @@ const typeDefs = `
         password: String!
     }
 
+    type Exercise {
+        id: ID!
+        name: String!
+        bodyPart: String
+        equipment: String
+        target: String
+        gifUrl: String
+    }
+
     type Query {
         me: User
+        exercises: [Exercise!]!
+        exercise(id: ID!): Exercise
+        searchExercises(query: String!): [Exercise!]!
     }
+
 
     type Mutation {
         login(
