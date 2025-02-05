@@ -1,4 +1,5 @@
 import Auth from '../utils/auth';
+import CoverPage from '../components/coverPage';
 
 const Homepage = () => {
     return (
@@ -6,10 +7,12 @@ const Homepage = () => {
             {Auth.loggedIn() ? (
                 <p>Logged In</p>
             ) : (
-                <p>Logged Out</p>
+                <>
+                    <CoverPage />
+                </>
             )}
         </>
-    )
-}
+    );
+};
 
 export default Homepage;
