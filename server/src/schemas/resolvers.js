@@ -1,4 +1,4 @@
-import { User } from '../models/index.js';
+import { Routine, User } from '../models/index.js';
 import { signToken, AuthenticationError } from '../utils/auth.js';
 import axios from 'axios';
 import dotenv from 'dotenv';
@@ -158,6 +158,47 @@ const resolvers = {
             const user = await User.create({ ...input });
             const token = signToken(user.username, user.email, user._id);
             return { token, user };
+        },
+        createRoutine: async (_parent, { input }, context) => {
+            if (!context.user) {
+                throw new AuthenticationError('You must be logged in to create a routine.');
+            }
+
+            const routineExercises = input.exercises.map(exId => ({ Exerciise: exId }));
+
+            const newRoutine = await Routine.create({
+                user: context.user._id,
+                name: input.name,
+                description: input.description,
+                exercises: routineExercises,
+            });
+
+            return newRoutine;
+        },
+        updateRoutine: async (_parent, { routineId, input }, context) => {
+            if (!context.user) {
+                throw new AuthenticationError('You must be logged in to update a routine.');
+            }
+
+            const routine = await Routine.findOne({ _id: routineId, user: context.user._id });
+            if (!routine) {
+                throw new Error('Routine not found.')
+            }
+
+            if (input.name !== undefined) {
+                routine.name = input.name;
+            }
+
+            if (input.description !== undefined) {
+                routine.description = input.description;
+            }
+
+            if (input.exercises !== undefined) {
+                routine.exercises = input.exercises.map(exId => ({ exercise: exId }));
+            }
+
+            await routine.save();
+            return routine;
         },
     },
 };

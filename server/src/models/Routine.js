@@ -5,15 +5,7 @@ const routineExerciseSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Exercise',
         required: true,
-    },
-    defaultSets: {
-        type: Number,
-        required: true,
-    },
-    defaultReps: {
-        type: Number,
-        required: true,
-    },
+    }
 });
 
 const routineSchema = new Schema({
