@@ -23,3 +23,39 @@ export const SIGNUP_USER = gql`
         }
     }
 `;
+
+export const CREATE_ROUTINE = gql`
+    mutation CreateRoutine($input: RoutineInput!) {
+        createRoutine(input: $input) {
+            _id
+            name
+            description
+            createdAt
+            exercises {
+                id
+                name
+                bodyPart
+                equipment
+                target
+                gifUrl
+            }
+        }
+    }
+`;
+
+export const UPDATE_ROUTINE = gql`
+    mutation UpdateRoutine($routineId: ID!, $input: UpdateRoutineInput!) {
+        updateRoutine(routineId: $routineId, input: $input) {
+            _id
+            name
+            description
+            createdAt
+            exercises {
+                exercise {
+                    id
+                    name
+                }
+            }
+        }
+    }
+`;

@@ -25,6 +25,27 @@ const typeDefs = `
         gifUrl: String
     }
 
+    type Routine {
+        _id: ID!
+        user: ID!
+        name: String!
+        description: String
+        exercises: [Exercise!]!
+        createdAt: String
+    }
+
+    input RoutineInput {
+        name: String!
+        description: String
+        exercises: [ID!]!
+    }
+
+    input UpdateRoutineInput {
+        name: String
+        description: String
+        exercises: [ID!]
+    }
+
     type Query {
         me: User
         exercisesByName(name: String!, offset: Int): [Exercise!]!
@@ -45,6 +66,10 @@ const typeDefs = `
         ): Auth
 
         signup(input: SignupInput!): Auth
+
+        createRoutine(input: RoutineInput!): Routine!
+
+        updateRoutine(routineId: ID!, input: UpdateRoutineInput!): Routine!
     }
 `;
 
