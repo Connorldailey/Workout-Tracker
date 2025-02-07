@@ -105,3 +105,31 @@ export const GET_RANDOM_EXERCISES = gql`
         }
     }
 `;
+
+export const GET_USER_ROUTINES = gql`
+  query GetUserRoutines($userId: ID!, $offset: Int!, $limit: Int!) {
+    user(id: $userId) {
+      routines(offset: $offset, limit: $limit) {
+        id
+        name
+        description
+        createdAt
+      }
+    }
+  }
+`;
+
+export const GET_ROUTINES_BY_USER = gql`
+  query RoutinesByUser($userId: ID!, $offset: Int, $limit: Int) {
+        routinesByUser(userId: $userId, offset: $offset, limit: $limit) {
+            _id
+            name
+            description
+            createdAt
+            exercises {
+                id
+                name
+            }
+        }
+    }
+`;

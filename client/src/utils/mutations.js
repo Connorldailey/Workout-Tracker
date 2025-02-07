@@ -59,3 +59,20 @@ export const UPDATE_ROUTINE = gql`
         }
     }
 `;
+
+export const ADD_EXERCISE_TO_ROUTINE = gql`
+    mutation AddExerciseToRoutine($exerciseId: ID!, $routineId: ID!) {
+        addExerciseToRoutine(exerciseId: $exerciseId, routineId: $routineId) {
+            _id
+            name
+            description
+            createdAt
+            exercises {
+                exercise {
+                    id
+                    name
+                }
+            }
+        }
+    }
+`;

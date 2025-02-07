@@ -57,6 +57,7 @@ const typeDefs = `
         bodyPartList: [String!]!
         equipmentList: [String!]!
         targetList: [String!]!
+        routinesByUser(userId: ID!, offset: Int, limit: Int): [Routine!]!
     }
 
     type Mutation {
@@ -70,6 +71,8 @@ const typeDefs = `
         createRoutine(input: RoutineInput!): Routine!
 
         updateRoutine(routineId: ID!, input: UpdateRoutineInput!): Routine!
+
+        addToExerciseToRoutine(userId: ID!, routineId: ID!, exerciseId: ID!): Routine    
     }
 `;
 
