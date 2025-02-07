@@ -46,6 +46,7 @@ export const CREATE_ROUTINE = gql`
 export const UPDATE_ROUTINE = gql`
     mutation UpdateRoutine($routineId: ID!, $input: UpdateRoutineInput!) {
         updateRoutine(routineId: $routineId, input: $input) {
+        
             _id
             name
             description
