@@ -105,7 +105,7 @@ const resolvers = {
                         limit: 10
                     }
                 });
-                return response.data.map(mapExercise);
+                return response.data;
             } catch (error) {
                 console.error('Error fetching random exercises:', error);
                 throw new Error('Failed to get random exercises.');

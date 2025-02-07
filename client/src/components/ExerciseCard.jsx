@@ -16,7 +16,7 @@ const ExerciseCard = ({ data }) => {
                     <Row>
                         <Col xs={12} lg={4}>
                             <Card.Img 
-                                className='w-100' 
+                                className='card-img' 
                                 src={exercise.gifUrl} 
                                 alt={exercise.name}
                             />
