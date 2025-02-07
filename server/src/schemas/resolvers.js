@@ -138,6 +138,18 @@ const resolvers = {
                 throw new Error('Failed to get target list.')
             }
         },
+        routinesByUser: async (_parent, { userId, offset, limit }, context) => {
+            if (!context.user) {
+                throw new AuthenticationError('You must be logged in to view your routines.');
+            }
+
+            const routines = await Routine.find({ user: userId })
+                .skip(offset)
+                .limit(limit)
+                .sort({ createdAt: -1 });
+
+            return routines;
+        },
     },
     Mutation: {
         login: async (_parent, { email, password }) => {
@@ -200,6 +212,22 @@ const resolvers = {
             await routine.save();
             return routine;
         },
+        //asdasdasd
+        addToExerciseToRoutine: async (_parent, { exerciseId, routineId }, context) => {
+            if (!context.user) {
+                throw new AuthenticationError('You must be logged in to add an exercise to a routine.');
+            }
+
+            const routine = await Routine.findOne({ _id: routineId, user: context.user._id });
+            if (!routine) {
+                throw new Error('Routine not found.');
+            }
+
+            routine.exercises.push({ exercise: exerciseId });
+            await routine.save();
+            return routine;
+        }
+        
     },
 };
 
