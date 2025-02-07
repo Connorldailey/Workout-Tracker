@@ -138,15 +138,12 @@ const resolvers = {
                 throw new Error('Failed to get target list.')
             }
         },
-        routinesByUser: async (_parent, { userId, offset, limit }, context) => {
+        routinesByUser: async (_parent, _args, context) => {
             if (!context.user) {
                 throw new AuthenticationError('You must be logged in to view your routines.');
             }
 
-            const routines = await Routine.find({ user: userId })
-                .skip(offset)
-                .limit(limit)
-                .sort({ createdAt: -1 });
+            const routines = await Routine.find({ user: context.user._id });
 
             return routines;
         },
@@ -176,18 +173,16 @@ const resolvers = {
                 throw new AuthenticationError('You must be logged in to create a routine.');
             }
 
-            const routineExercises = input.exercises.map(exId => ({ Exerciise: exId }));
-
             const newRoutine = await Routine.create({
                 user: context.user._id,
                 name: input.name,
                 description: input.description,
-                exercises: routineExercises,
+                exercises: input.exercises,
             });
 
             return newRoutine;
         },
-        updateRoutine: async (_parent, { routineId, input }, context) => {
+        updateRoutine: async (_parent, { routineId, exercise }, context) => {
             if (!context.user) {
                 throw new AuthenticationError('You must be logged in to update a routine.');
             }
@@ -197,37 +192,11 @@ const resolvers = {
                 throw new Error('Routine not found.')
             }
 
-            if (input.name !== undefined) {
-                routine.name = input.name;
-            }
-
-            if (input.description !== undefined) {
-                routine.description = input.description;
-            }
-
-            if (input.exercises !== undefined) {
-                routine.exercises = input.exercises.map(exId => ({ exercise: exId }));
-            }
+            routine.exercises.push(exercise);
 
             await routine.save();
             return routine;
         },
-        //asdasdasd
-        addToExerciseToRoutine: async (_parent, { exerciseId, routineId }, context) => {
-            if (!context.user) {
-                throw new AuthenticationError('You must be logged in to add an exercise to a routine.');
-            }
-
-            const routine = await Routine.findOne({ _id: routineId, user: context.user._id });
-            if (!routine) {
-                throw new Error('Routine not found.');
-            }
-
-            routine.exercises.push({ exercise: exerciseId });
-            await routine.save();
-            return routine;
-        }
-        
     },
 };
 

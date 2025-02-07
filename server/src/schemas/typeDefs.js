@@ -22,6 +22,19 @@ const typeDefs = `
         bodyPart: String
         equipment: String
         target: String
+        secondary: [String!]
+        instructions: [String!]
+        gifUrl: String
+    }
+
+    input ExerciseInput {
+        id: ID!
+        name: String!
+        bodyPart: String
+        equipment: String
+        target: String
+        secondary: [String!]
+        instructions: [String!]
         gifUrl: String
     }
 
@@ -37,13 +50,7 @@ const typeDefs = `
     input RoutineInput {
         name: String!
         description: String
-        exercises: [ID!]!
-    }
-
-    input UpdateRoutineInput {
-        name: String
-        description: String
-        exercises: [ID!]
+        exercises: [ExerciseInput!]!
     }
 
     type Query {
@@ -57,7 +64,7 @@ const typeDefs = `
         bodyPartList: [String!]!
         equipmentList: [String!]!
         targetList: [String!]!
-        routinesByUser(userId: ID!, offset: Int, limit: Int): [Routine!]!
+        routinesByUser: [Routine!]!
     }
 
     type Mutation {
@@ -70,9 +77,7 @@ const typeDefs = `
 
         createRoutine(input: RoutineInput!): Routine!
 
-        updateRoutine(routineId: ID!, input: UpdateRoutineInput!): Routine!
-
-        addToExerciseToRoutine(userId: ID!, routineId: ID!, exerciseId: ID!): Routine    
+        updateRoutine(routineId: ID!, exercise: ExerciseInput!): Routine!
     }
 `;
 
