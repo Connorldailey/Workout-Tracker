@@ -176,7 +176,7 @@ const resolvers = {
                 throw new AuthenticationError('You must be logged in to create a routine.');
             }
 
-            const routineExercises = input.exercises.map(exId => ({ Exerciise: exId }));
+            const routineExercises = input.exercises.map(exId => ({ Exercise: exId }));
 
             const newRoutine = await Routine.create({
                 user: context.user._id,
