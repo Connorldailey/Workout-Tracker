@@ -33,7 +33,7 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <Navbar />
-      <div className='p-3'>
+      <div className='p-3 p-md-4 p-lg-5'>
         <Outlet />
       </div>
     </ApolloProvider>
