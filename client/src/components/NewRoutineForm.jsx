@@ -5,16 +5,15 @@ import {
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_ROUTINE } from '../utils/mutations';
+import { GET_USER_ROUTINES } from '../utils/queries';
 
-const NewRoutineForm = ({ exercise }) => {
-    // State to hold routine name and description.
+const NewRoutineForm = ({ exercise, closeForm }) => {
     const [newRoutineData, setNewRoutineData] = useState({ name: '', description: '' });
-    // State for displaying a message after submission.
     const [message, setMessage] = useState('');
-    // Mutation for adding a new routine.
-    const [createRoutine, { data, loading, error }] = useMutation(CREATE_ROUTINE);
-    
-    // Handler for input changes.
+    const [createRoutine] = useMutation(CREATE_ROUTINE, {
+        refetchQueries: [{ query: GET_USER_ROUTINES }]
+    });
+
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setNewRoutineData({ ...newRoutineData, [name]: value });
@@ -27,7 +26,6 @@ const NewRoutineForm = ({ exercise }) => {
             .join(' ');
     }
 
-    // Handler for form submission
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -50,6 +48,7 @@ const NewRoutineForm = ({ exercise }) => {
                 },
             });
             setMessage('Routine successfully created.');
+            closeForm(); 
         } catch (error) {
             setMessage('Failed to create routine.');
             console.error('Error creating routine:', error);
@@ -94,10 +93,10 @@ const NewRoutineForm = ({ exercise }) => {
                 Submit
             </Button>
 
-            {/* Display a message based on the mutation result */}
             {message && <p>{message}</p>}
         </Form>
     );
 };
+
 
 export default NewRoutineForm;

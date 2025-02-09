@@ -78,6 +78,10 @@ const typeDefs = `
         createRoutine(input: RoutineInput!): Routine!
 
         updateRoutine(routineId: ID!, exercise: ExerciseInput!): Routine!
+
+        deleteRoutine(routineId: ID!): Routine!
+
+        deleteExerciseFromRoutine(routineId: ID!, exerciseId: ID!): Routine!
     }
 `;
 

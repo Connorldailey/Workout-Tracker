@@ -65,3 +65,25 @@ export const UPDATE_ROUTINE = gql`
         }
     }
 `;
+
+export const DELETE_ROUTINE = gql`
+    mutation DeleteRoutine($routineId: ID!) {
+        deleteRoutine(routineId: $routineId) {
+            _id
+            name
+        }
+    }
+`;
+
+export const DELETE_EXERCISE_FROM_ROUTINE = gql`
+    mutation deleteExerciseFromRoutine($routineId: ID!, $exerciseId: ID!) {
+        deleteExerciseFromRoutine(routineId: $routineId, exerciseId: $exerciseId) {
+            _id
+            name
+            exercises {
+                _id
+                name
+            }
+        }
+    }
+`;

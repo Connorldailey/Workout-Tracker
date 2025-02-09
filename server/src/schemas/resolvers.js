@@ -197,6 +197,34 @@ const resolvers = {
             await routine.save();
             return routine;
         },
+        deleteRoutine: async (_parent, { routineId }, context) => {
+            if (!context.user) {
+                throw new AuthenticationError('You must be logged in to delete a routine.');
+            }
+
+            const routine = await Routine.findOneAndDelete({ _id: routineId, user: context.user._id });
+            if (!routine) {
+                throw new Error('Routine not found.')
+            }
+
+            return routine;
+        },
+        deleteExerciseFromRoutine: async (_parent, { routineId, exerciseId }, context) => {
+            if (!context.user) {
+                throw new AuthenticationError('You must be logged in to delete an exercise from a routine.');
+            }
+
+            const routine = await Routine.findOne({ _id: routineId, user: context.user._id });
+            if (!routine) {
+                throw new Error('Routine not found.')
+            }
+
+            const updatedExercises = routine.exercises.filter(exercise => exercise.id !== exerciseId);
+            routine.exercises = updatedExercises;
+
+            await routine.save();
+            return routine;
+        }
     },
 };
 
