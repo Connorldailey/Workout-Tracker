@@ -1,17 +1,12 @@
-import { useState, useEffect } from 'react';
-import { 
-    Button, 
-    Container, 
-    Row, 
-    Col, 
-    Spinner 
-} from 'react-bootstrap';
+import { useState } from 'react';
+import { Button, Container, Row, Col, Spinner, Card } from 'react-bootstrap';
 import { useQuery } from '@apollo/client';
-import { GET_USER_ROUTINES } from '../utils/queries';  // Assuming you have this query defined elsewhere
-import RoutineCard from '../components/RoutineCard';  // Component to display routines
+import { GET_USER_ROUTINES } from '../utils/queries';
+import RoutineCard from '../components/RoutineCard';
 
 const RoutinesPage = () => {
     const { data, loading, error } = useQuery(GET_USER_ROUTINES);
+    const [selectedRoutine, setSelectedRoutine] = useState(null);
 
     if (loading) {
         return (
@@ -28,22 +23,51 @@ const RoutinesPage = () => {
     }
 
     return (
-        <>
-            <h1 className='mb-3'>Your Routines</h1>
-            <Container fluid className='p-md-3'>
-                <Row>
-                    {data && data.routinesByUser && data.routinesByUser.length > 0 ? (
-                        data.routinesByUser.map((routine) => (
-                            <Col key={routine._id} xs={12} md={6} lg={4}>
-                                <RoutineCard routine={routine} />
-                            </Col>
-                        ))
-                    ) : (
-                        <p>No routines found.</p>
-                    )}
-                </Row>
-            </Container>
-        </>
+        <Container>
+            <h1 className="mb-3">Your Routines</h1>
+            <Row>
+                {data?.routinesByUser?.length > 0 ? (
+                    data.routinesByUser.map((routine) => (
+                        <Col key={routine._id} xs={12} md={6} lg={4}>
+                            <RoutineCard 
+                                routine={routine} 
+                                onSelect={() => setSelectedRoutine(routine)}
+                            />
+                        </Col>
+                    ))
+                ) : (
+                    <p>No routines found.</p>
+                )}
+            </Row>
+
+            {/* Routine Details Section */}
+            {selectedRoutine && (
+                <Card className="mt-4">
+                    <Card.Body>
+                        <Card.Title>{selectedRoutine.name}</Card.Title>
+                        <Card.Subtitle className="mb-2 text-muted">
+                            Created: {new Date(parseInt(selectedRoutine.createdAt)).toLocaleDateString()}
+                        </Card.Subtitle>
+                        <Card.Text>
+                            {selectedRoutine.description || "No description available."}
+                        </Card.Text>
+                        <h5>Exercises:</h5>
+                        <ul>
+                            {selectedRoutine.exercises.length > 0 ? (
+                                selectedRoutine.exercises.map((exercise, index) => (
+                                    <li key={index}>{exercise.name}</li>
+                                ))
+                            ) : (
+                                <p>No exercises added yet.</p>
+                            )}
+                        </ul>
+                        <Button variant="secondary" onClick={() => setSelectedRoutine(null)}>
+                            Close
+                        </Button>
+                    </Card.Body>
+                </Card>
+            )}
+        </Container>
     );
 };
 
