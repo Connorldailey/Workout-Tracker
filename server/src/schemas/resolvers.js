@@ -3,6 +3,7 @@ import { signToken, AuthenticationError } from '../utils/auth.js';
 import axios from 'axios';
 import dotenv from 'dotenv';
 import https from 'https';
+import { ObjectId } from 'mongodb'
 
 dotenv.config();
 
@@ -146,6 +147,15 @@ const resolvers = {
             const routines = await Routine.find({ user: context.user._id });
 
             return routines;
+        },
+        routineById: async (_parent, { routineId }, context) => {
+            if (!context.user) {
+                throw new AuthenticationError('You must be logged in to view your routines.');
+            }
+
+            const routine = await Routine.findOne({ user: context.user._id, _id: routineId });
+
+            return routine;
         },
     },
     Mutation: {

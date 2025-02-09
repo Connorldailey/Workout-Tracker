@@ -65,6 +65,7 @@ const typeDefs = `
         equipmentList: [String!]!
         targetList: [String!]!
         routinesByUser: [Routine!]!
+        routineById(routineId: ID!): Routine!
     }
 
     type Mutation {

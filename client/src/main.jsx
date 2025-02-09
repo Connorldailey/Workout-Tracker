@@ -8,6 +8,7 @@ import ExplorePage from './pages/Explore.jsx';
 import RoutinesPage from './pages/Routines.jsx';
 import HistoryPage from './pages/History.jsx';
 import ProgressPage from './pages/Progress.jsx';
+import WorkoutPage from './pages/Workout.jsx';
 import ErrorPage from './pages/ErrorPage';
 
 const router = createBrowserRouter([
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: '/progress',
         element: <ProgressPage />,
+      },
+      {
+        path: '/workout/:routineId',
+        element: <WorkoutPage />,
       },
     ],
   },
