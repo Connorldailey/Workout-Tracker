@@ -36,7 +36,7 @@ const NewRoutineForm = ({ exercise }) => {
                     input: {
                         name: newRoutineData.name,
                         description: newRoutineData.description,
-                        exercises: [{
+                        exercises: exercise ? [{
                             id: exercise.id,
                             name: exercise.name,
                             bodyPart: exercise.bodyPart,
@@ -45,7 +45,7 @@ const NewRoutineForm = ({ exercise }) => {
                             secondary: exercise.secondary,
                             instructions: exercise.instructions,
                             gifUrl: exercise.gifUrl
-                        }],
+                        }] : [],
                     },
                 },
             });
@@ -81,7 +81,11 @@ const NewRoutineForm = ({ exercise }) => {
                 />
             </Form.Group>
 
-            <p>Adding Exercise: {toTitleCase(exercise.name)}</p>
+            {exercise ? (
+                <p>Adding Exercise: {toTitleCase(exercise.name)}</p>
+            ) : (
+                <p>No exercise selected.</p>
+            )}
 
             <Button
                 disabled={!(newRoutineData.name && newRoutineData.description)}
