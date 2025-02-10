@@ -35,10 +35,13 @@ const RoutineCard = ({ routine, onSelect }) => {
     return (
         <Card className="mb-4">
             <Card.Body>
-                <Card.Title>{routine.name}</Card.Title>
-                <Button variant="danger" onClick={handleDeleteRoutine}>
-                    Delete Routine
-                </Button>
+                <div className="d-flex justify-content-between align-items-center">
+                    <Card.Title className="mb-0">{routine.name}</Card.Title>
+                    <Button variant="danger" className="btn-sm ms-1" onClick={handleDeleteRoutine}>
+                        Delete
+                    </Button>
+                </div>
+                <hr />
                 <Card.Subtitle className="mb-2 text-muted">Created: {formattedDate}</Card.Subtitle>
                 <Card.Text>{routine.description || 'No description available for this routine.'}</Card.Text>
                 <Button variant="primary" onClick={onSelect}>
@@ -47,6 +50,7 @@ const RoutineCard = ({ routine, onSelect }) => {
             </Card.Body>
         </Card>
     );
+    
 };
 
 export default RoutineCard;

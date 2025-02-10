@@ -92,7 +92,12 @@ const NewRoutineForm = ({ exercise, closeForm }) => {
                 variant='success'>
                 Submit
             </Button>
-
+            <Button
+                className='ms-2'
+                onClick={closeForm}
+                variant='danger'>
+                Cancel
+            </Button>
             {message && <p>{message}</p>}
         </Form>
     );
