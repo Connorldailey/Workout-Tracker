@@ -159,3 +159,23 @@ export const GET_ROUTINE_BY_ID = gql`
         }
     }
 `;
+
+export const GET_WORKOUTS = gql`
+    query GetWorkouts {
+        workoutsByUser {
+            _id
+            user
+            date
+            routine
+            exercises {
+                exerciseID
+                sets {
+                    weight
+                    reps
+                }
+                notes
+            }
+            overallNotes
+        }
+    }
+`;

@@ -103,6 +103,7 @@ const typeDefs = `
         targetList: [String!]!
         routinesByUser: [Routine!]!
         routineById(routineId: ID!): Routine!
+        workoutsByUser: [Workout!]!
     }
 
     type Mutation {

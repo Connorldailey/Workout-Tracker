@@ -23,7 +23,6 @@ const AppNavbar = () => {
                                     <Nav.Link as={Link} to='/explore'>Explore</Nav.Link>
                                     <Nav.Link as={Link} to='/routines'>Routines</Nav.Link>
                                     <Nav.Link as={Link} to='/history'>History</Nav.Link>
-                                    <Nav.Link as={Link} to='/progress'>Progress</Nav.Link>
                                     <Nav.Link onClick={Auth.logout}>Logout</Nav.Link>
                                 </>
                             ) : (

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Container, Row, Col, Spinner, Card } from 'react-bootstrap';
+import { Button, Container, Modal, Spinner, Card, Row, Col } from 'react-bootstrap';
 import { useQuery } from '@apollo/client';
 import { GET_USER_ROUTINES } from '../utils/queries';
 import RoutineCard from '../components/RoutineCard';
@@ -8,9 +8,15 @@ import NewRoutineForm from '../components/NewRoutineForm';
 const RoutinesPage = () => {
     const { data, loading, error } = useQuery(GET_USER_ROUTINES);
     const [selectedRoutine, setSelectedRoutine] = useState(null);
-    const [showForm, setShowForm] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
-    const defaultExercise = null;
+    const toTitleCase = (str) => {
+        return str
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
+
     if (loading) {
         return (
             <Container className="text-center my-3">
@@ -28,33 +34,36 @@ const RoutinesPage = () => {
     return (
         <Container>
             <div className="d-flex justify-content-between align-items-center mb-3">
-                <h1>Your Routines</h1>
-                <Button variant="primary" onClick={() => setShowForm(true)}>
+                <h1>Personal Routines</h1>
+                <Button variant="primary" onClick={() => setShowModal(true)}>
                     Create New Routine
                 </Button>
             </div>
-            {showForm && <NewRoutineForm exercise={defaultExercise} closeForm={() => setShowForm(false)} />}
-            <br/>
-    
+
             {/* Layout Wrapper */}
-            <div className="d-flex">
-                {/* Routine Cards Section (Stacked Left) */}
-                <div style={{ width: "250px" }} className="d-flex flex-column me-4">
+            <div className="d-flex flex-column flex-lg-row">
+                {/* Routine Cards Section (Left, Wider) */}
+                <div style={{ width: "60%" }} className="d-flex flex-column me-4">
                     {data?.routinesByUser?.length > 0 ? (
-                        data.routinesByUser.map((routine) => (
-                            <RoutineCard 
-                                key={routine._id} 
-                                routine={routine} 
-                                onSelect={() => setSelectedRoutine(routine)} 
-                            />
-                        ))
+                        <Row xs={1} sm={1} md={2} lg={2} className="g-4">
+                            {data.routinesByUser.map((routine) => (
+                                <Col key={routine._id} className="d-flex justify-content-center">
+                                    <div style={{ width: "100%", maxWidth: "600px" }}>
+                                        <RoutineCard 
+                                            routine={routine} 
+                                            onSelect={() => setSelectedRoutine(routine)} 
+                                        />
+                                    </div>
+                                </Col>
+                            ))}
+                        </Row>
                     ) : (
                         <p>No routines found.</p>
                     )}
                 </div>
-    
-                {/* Routine Details Section (Right) */}
-                <div className="flex-grow-1">
+
+                {/* Routine Details Section (Right, Goes to Bottom on Smaller Screens) */}
+                <div className="d-flex flex-column flex-lg-grow-1 mt-4 mt-lg-0">
                     {selectedRoutine && (
                         <Card className="mt-4">
                             <Card.Body>
@@ -70,7 +79,7 @@ const RoutinesPage = () => {
                                     {selectedRoutine.exercises.length > 0 ? (
                                         selectedRoutine.exercises.map((exercise, index) => (
                                             <li key={index} className="d-flex justify-content-between align-items-center">
-                                                {exercise.name}
+                                                {toTitleCase(exercise.name)}
                                             </li>
                                         ))
                                     ) : (
@@ -85,10 +94,18 @@ const RoutinesPage = () => {
                     )}
                 </div>
             </div>
+
+            {/* Modal for Creating a New Routine */}
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Create New Routine</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <NewRoutineForm closeForm={() => setShowModal(false)} />
+                </Modal.Body>
+            </Modal>
         </Container>
     );
-    
 };
-
 
 export default RoutinesPage;
