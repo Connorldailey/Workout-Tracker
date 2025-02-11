@@ -11,6 +11,14 @@ const RoutinesPage = () => {
     const [showForm, setShowForm] = useState(false);
 
     const defaultExercise = null;
+
+    const toTitleCase = (str) => {
+        return str
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    }
+    
     if (loading) {
         return (
             <Container className="text-center my-3">
@@ -70,7 +78,7 @@ const RoutinesPage = () => {
                                     {selectedRoutine.exercises.length > 0 ? (
                                         selectedRoutine.exercises.map((exercise, index) => (
                                             <li key={index} className="d-flex justify-content-between align-items-center">
-                                                {exercise.name}
+                                                {toTitleCase(exercise.name)}
                                             </li>
                                         ))
                                     ) : (
