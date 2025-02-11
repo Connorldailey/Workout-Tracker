@@ -12,9 +12,8 @@ const setSchema = new Schema({
 });
 
 const workoutExerciseSchema = new Schema({
-    exercise: {
-        type: Schema.Types.ObjectId,
-        ref: 'Exercise',
+    exerciseId: {
+        type: String,
         required: true,
     },
     sets: [setSchema],

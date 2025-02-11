@@ -1,14 +1,9 @@
 import './App.css';
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  createHttpLink,
-} from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
-import Navbar from './components/Navbar';
+import Navbar from './components/navbar';
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -30,14 +25,18 @@ const client = new ApolloClient({
 });
 
 function App() {
+  const location = useLocation();
+
+  const isCoverPage = location.pathname === '/';
+
   return (
     <ApolloProvider client={client}>
       <Navbar />
-      <div className='p-3'>
+      <div className={isCoverPage ? '' : 'p-3 p-md-4 p-lg-5'}>
         <Outlet />
       </div>
     </ApolloProvider>
   );
-};
+}
 
 export default App;

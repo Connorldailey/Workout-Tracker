@@ -8,9 +8,9 @@ const HomePanel = () => {
         <div>
             <p>Agenda of Workouts for the Week</p>
         </div>
-        <Link to='/workoutLog'>
-             <button>Start Workout</button>
-        </Link>
+            <Link to='/WorkoutLog'>
+                <button className="button">Start Workout</button>
+            </Link>
         <div>
             <p>Last 5 recorded workouts</p>
         </div>

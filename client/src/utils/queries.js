@@ -18,6 +18,8 @@ export const SEARCH_BY_NAME = gql`
             bodyPart
             equipment
             target
+            secondary
+            instructions
             gifUrl
         }
     }
@@ -31,6 +33,8 @@ export const SEARCH_BY_BODYPART = gql`
             bodyPart
             equipment
             target
+            secondary
+            instructions
             gifUrl
         }
     }
@@ -44,6 +48,8 @@ export const SEARCH_BY_EQUIPMENT = gql`
             bodyPart
             equipment
             target
+            secondary
+            instructions
             gifUrl
         }
     }
@@ -57,6 +63,8 @@ export const SEARCH_BY_TARGET = gql`
             bodyPart
             equipment
             target
+            secondary
+            instructions
             gifUrl
         }
     }
@@ -70,6 +78,8 @@ export const SEARCH_BY_ID = gql`
             bodyPart
             equipment
             target
+            secondary
+            instructions
             gifUrl
         }
     }
@@ -101,35 +111,71 @@ export const GET_RANDOM_EXERCISES = gql`
             bodyPart
             equipment
             target
+            secondary
+            instructions
             gifUrl
         }
     }
 `;
 
 export const GET_USER_ROUTINES = gql`
-  query GetUserRoutines($userId: ID!, $offset: Int!, $limit: Int!) {
-    user(id: $userId) {
-      routines(offset: $offset, limit: $limit) {
-        id
-        name
-        description
-        createdAt
-      }
-    }
-  }
-`;
-
-export const GET_ROUTINES_BY_USER = gql`
-  query RoutinesByUser($userId: ID!, $offset: Int, $limit: Int) {
-        routinesByUser(userId: $userId, offset: $offset, limit: $limit) {
+    query GetUserRoutines {
+        routinesByUser {
             _id
             name
             description
-            createdAt
             exercises {
                 id
                 name
+                bodyPart
+                equipment
+                target
+                secondary
+                instructions
+                gifUrl
             }
+            createdAt
+        }
+    }
+`;
+
+export const GET_ROUTINE_BY_ID = gql`
+    query GetRoutineById($routineId: ID!) {
+        routineById(routineId: $routineId) {
+            _id
+            name
+            description
+            exercises {
+                id
+                name
+                bodyPart
+                equipment
+                target
+                secondary
+                instructions
+                gifUrl
+            }
+            createdAt
+        }
+    }
+`;
+
+export const GET_WORKOUTS = gql`
+    query GetWorkouts {
+        workoutsByUser {
+            _id
+            user
+            date
+            routine
+            exercises {
+                exerciseID
+                sets {
+                    weight
+                    reps
+                }
+                notes
+            }
+            overallNotes
         }
     }
 `;

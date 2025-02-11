@@ -37,6 +37,8 @@ export const CREATE_ROUTINE = gql`
                 bodyPart
                 equipment
                 target
+                secondary
+                instructions
                 gifUrl
             }
         }
@@ -44,35 +46,64 @@ export const CREATE_ROUTINE = gql`
 `;
 
 export const UPDATE_ROUTINE = gql`
-    mutation UpdateRoutine($routineId: ID!, $input: UpdateRoutineInput!) {
-        updateRoutine(routineId: $routineId, input: $input) {
+    mutation UpdateRoutine($routineId: ID!, $exercise: ExerciseInput!) {
+        updateRoutine(routineId: $routineId, exercise: $exercise) {
             _id
             name
             description
             createdAt
             exercises {
-                exercise {
-                    id
-                    name
-                }
+                id
+                name
+                bodyPart
+                equipment
+                target
+                secondary
+                instructions
+                gifUrl
             }
         }
     }
 `;
 
-export const ADD_EXERCISE_TO_ROUTINE = gql`
-    mutation AddExerciseToRoutine($exerciseId: ID!, $routineId: ID!) {
-        addExerciseToRoutine(exerciseId: $exerciseId, routineId: $routineId) {
+export const DELETE_ROUTINE = gql`
+    mutation DeleteRoutine($routineId: ID!) {
+        deleteRoutine(routineId: $routineId) {
             _id
             name
-            description
-            createdAt
+        }
+    }
+`;
+
+export const DELETE_EXERCISE_FROM_ROUTINE = gql`
+    mutation deleteExerciseFromRoutine($routineId: ID!, $exerciseId: ID!) {
+        deleteExerciseFromRoutine(routineId: $routineId, exerciseId: $exerciseId) {
+            _id
+            name
             exercises {
-                exercise {
-                    id
-                    name
-                }
+                _id
+                name
             }
+        }
+    }
+`;
+
+export const ADD_WORKOUT = gql`
+    mutation AddWorkout($input: WorkoutInput!) {
+        addWorkout(input: $input) {
+            _id
+            user
+            date
+            routine
+            exercises {
+                exerciseId
+                sets {
+                    weight
+                    reps
+                }
+                notes
+            }
+            overallNotes
         }
     }
 `;

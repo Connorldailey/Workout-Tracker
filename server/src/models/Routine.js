@@ -1,12 +1,5 @@
 import { Schema, model } from 'mongoose';
-
-const routineExerciseSchema = new Schema({
-    exercise: {
-        type: Schema.Types.ObjectId,
-        ref: 'Exercise',
-        required: true,
-    }
-});
+import Exercise from './Exercise.js';
 
 const routineSchema = new Schema({
     user: {
@@ -21,7 +14,7 @@ const routineSchema = new Schema({
     description: {
         type: String,
     },
-    exercises: [routineExerciseSchema],
+    exercises: [Exercise.schema],
     createdAt: {
         type: Date,
         default: Date.now

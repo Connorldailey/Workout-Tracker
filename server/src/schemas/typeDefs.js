@@ -22,6 +22,19 @@ const typeDefs = `
         bodyPart: String
         equipment: String
         target: String
+        secondary: [String!]
+        instructions: [String!]
+        gifUrl: String
+    }
+
+    input ExerciseInput {
+        id: ID!
+        name: String!
+        bodyPart: String
+        equipment: String
+        target: String
+        secondary: [String!]
+        instructions: [String!]
         gifUrl: String
     }
 
@@ -37,13 +50,44 @@ const typeDefs = `
     input RoutineInput {
         name: String!
         description: String
-        exercises: [ID!]!
+        exercises: [ExerciseInput!]!
     }
 
-    input UpdateRoutineInput {
-        name: String
-        description: String
-        exercises: [ID!]
+    type Set {
+        weight: Float!
+        reps: Int!
+    }
+        
+    type WorkoutExercise {
+        exerciseId: String!
+        sets: [Set!]!
+        notes: String
+    }
+
+    type Workout {
+        _id: ID!
+        user: ID!
+        date: String
+        routine: ID!
+        exercises: [WorkoutExercise!]!
+        overallNotes: String!
+    }
+
+    input SetInput {
+        weight: Float!
+        reps: Int!
+    }
+
+    input WorkoutExerciseInput {
+        exerciseId: String!
+        sets: [SetInput!]!
+        notes: String
+    }
+
+    input WorkoutInput {
+        routineId: ID!
+        exercises: [WorkoutExerciseInput!]!
+        overallNotes: String!
     }
 
     type Query {
@@ -57,7 +101,9 @@ const typeDefs = `
         bodyPartList: [String!]!
         equipmentList: [String!]!
         targetList: [String!]!
-        routinesByUser(userId: ID!, offset: Int, limit: Int): [Routine!]!
+        routinesByUser: [Routine!]!
+        routineById(routineId: ID!): Routine!
+        workoutsByUser: [Workout!]!
     }
 
     type Mutation {
@@ -70,9 +116,13 @@ const typeDefs = `
 
         createRoutine(input: RoutineInput!): Routine!
 
-        updateRoutine(routineId: ID!, input: UpdateRoutineInput!): Routine!
+        updateRoutine(routineId: ID!, exercise: ExerciseInput!): Routine!
 
-        addToExerciseToRoutine(userId: ID!, routineId: ID!, exerciseId: ID!): Routine    
+        deleteRoutine(routineId: ID!): Routine!
+
+        deleteExerciseFromRoutine(routineId: ID!, exerciseId: ID!): Routine!
+
+        addWorkout(input: WorkoutInput!): Workout!
     }
 `;
 

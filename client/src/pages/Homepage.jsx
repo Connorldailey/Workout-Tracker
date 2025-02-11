@@ -1,6 +1,6 @@
 import Auth from '../utils/auth';
-import CoverPage from '../components/CoverPage';
-import HomePanel from '../components/HomePanel';
+import CoverPage from '../components/coverPage';
+import HomePanel from '../components/homePanel';
 
 const Homepage = () => {
     return (

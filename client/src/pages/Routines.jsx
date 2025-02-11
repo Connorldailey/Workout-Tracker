@@ -1,23 +1,21 @@
-import { useState, useEffect } from 'react';
-import { Button, Container, Row, Col, Spinner } from 'react-bootstrap';
+import { useState } from 'react';
+import { Button, Container, Modal, Spinner, Card, Row, Col } from 'react-bootstrap';
 import { useQuery } from '@apollo/client';
-import AuthService from '../utils/auth';  // Import AuthService from utils
-import { GET_ROUTINES_BY_USER } from '../utils/queries';  // Assuming you have this query defined elsewhere
-import RoutineCard from '../components/RoutineCard';  // Component to display routines
+import { GET_USER_ROUTINES } from '../utils/queries';
+import RoutineCard from '../components/RoutineCard';
+import NewRoutineForm from '../components/NewRoutineForm';
+
+const toTitleCase = (str) => {
+    return str
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+};
 
 const RoutinesPage = () => {
-    const userId = AuthService.getProfile().data._id;  // Get the user ID from the JWT
-    const [pageIndex, setPageIndex] = useState(0);
-    const [limit, setLimit] = useState(10); // Number of routines per page
-
-    const { data, loading, error } = useQuery(GET_ROUTINES_BY_USER, {
-        variables: { userId, offset: pageIndex * limit, limit },
-        fetchPolicy: 'cache-and-network'  // Ensures we get fresh data on page change
-    });
-
-    const handlePageChange = (newPageIndex) => {
-        setPageIndex(newPageIndex);
-    };
+    const { data, loading, error } = useQuery(GET_USER_ROUTINES);
+    const [selectedRoutine, setSelectedRoutine] = useState(null);
+    const [showModal, setShowModal] = useState(false);
 
     if (loading) {
         return (
@@ -33,39 +31,70 @@ const RoutinesPage = () => {
         return <p>Error: {error.message}</p>;
     }
 
-    const routines = data?.routinesByUser || [];
+    const handleCloseDetails = () => setSelectedRoutine(null);
 
     return (
         <>
-            <h1 className='mb-3'>Your Routines</h1>
-            <Container fluid>
-                <Row>
-                    {routines.length > 0 ? (
-                        routines.map((routine) => (
-                            <Col key={routine._id} xs={12} md={6} lg={4} className="mb-4">
-                                <RoutineCard routine={routine} />
-                            </Col>
-                        ))
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                <h1>Your Routines</h1>
+                <Button variant="primary" onClick={() => setShowModal(true)}>
+                    Create New Routine
+                </Button>
+            </div>
+
+            {/* Conditionally render routine list or routine details */}
+            {selectedRoutine ? (
+                <Container>
+                    <Card className="mb-4">
+                        <Card.Body>
+                            <Card.Title>{selectedRoutine.name}</Card.Title>
+                            <Card.Subtitle className="mb-2 text-muted">
+                                Created: {new Date(parseInt(selectedRoutine.createdAt)).toLocaleDateString()}
+                            </Card.Subtitle>
+                            <Card.Text>
+                                {selectedRoutine.description || 'No description available.'}
+                            </Card.Text>
+                            <h5>Exercises:</h5>
+                            {selectedRoutine.exercises.length > 0 ? (
+                                <ul>
+                                    {selectedRoutine.exercises.map((exercise, index) => (
+                                        <li key={index}>{toTitleCase(exercise.name)}</li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No exercises added yet.</p>
+                            )}
+                            <Button variant="secondary" onClick={handleCloseDetails}>
+                                Back to Routines
+                            </Button>
+                        </Card.Body>
+                    </Card>
+                </Container>
+            ) : (
+                <Container>
+                    {data?.routinesByUser?.length > 0 ? (
+                        <Row xs={1} md={2} lg={3} className="g-4">
+                            {data.routinesByUser.map((routine) => (
+                                <Col key={routine._id}>
+                                    <RoutineCard routine={routine} onSelect={() => setSelectedRoutine(routine)} />
+                                </Col>
+                            ))}
+                        </Row>
                     ) : (
                         <p>No routines found.</p>
                     )}
-                </Row>
-            </Container>
-
-            {routines.length > 0 && (
-                <Container className="text-center">
-                    {[...Array(5).keys()].map((page) => (
-                        <Button
-                            key={page}
-                            variant={pageIndex === page ? 'primary' : 'secondary'}
-                            onClick={() => handlePageChange(page)}
-                            className="me-2"
-                        >
-                            {page + 1}
-                        </Button>
-                    ))}
                 </Container>
             )}
+
+            {/* Modal for Creating a New Routine */}
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Create New Routine</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <NewRoutineForm closeForm={() => setShowModal(false)} />
+                </Modal.Body>
+            </Modal>
         </>
     );
 };

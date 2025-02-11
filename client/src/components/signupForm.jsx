@@ -8,12 +8,18 @@ const SignupForm = () => {
     const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '' });
     const [validated, setValidated] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+    const [ error, setError ] = useState(null);
+    const [loading, setLoading] = useState(false);
     
     const [signupUser] = useMutation(SIGNUP_USER);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setUserFormData({ ...userFormData, [name]: value });
+
+        setShowAlert(false);
+        setError(null);
+        setValidated(false);
     };
 
     const handleFormSubmit = async (event) => {
@@ -26,6 +32,10 @@ const SignupForm = () => {
             return;
         }
 
+        setLoading(true);
+        setShowAlert(false);
+        setValidated(false);
+
         try {
             const { data } = await signupUser({
                 variables: { input: { username: userFormData.username, email: userFormData.email, password: userFormData.password } },
@@ -35,10 +45,20 @@ const SignupForm = () => {
                 throw new Error('Something went wrong!');
             }
 
+            setTimeout(() => {
             Auth.login(data.signup.token);
+            }, 500);
         } catch (err) {
             console.error(err);
+            setError("Something went wrong with your signup credentials!");
+            setTimeout(() => {
             setShowAlert(true);
+            }, 1000);
+        } finally {
+            setTimeout(() => {
+                setLoading(false);
+                setValidated(true);
+            }, 1000);
         }
 
         setUserFormData({
