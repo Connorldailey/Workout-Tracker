@@ -9,20 +9,24 @@ const toTitleCase = (str) => {
         .join(' ');
 }
 
-const WorkoutForm = ({ exercise, updateWorkout }) => {
+const WorkoutForm = ({ exercise, updateWorkout, removeExercise }) => {
     // State for sets and notes.
-    const [sets, setSets] = useState([{ reps: '', weight: '' }]);
+    const [sets, setSets] = useState([{ weight: '', reps: '' }]);
     const [notes, setNotes] = useState('');
-    
+
     // useEffect to update new exercise data whenever sets or notes change,
     // and then pass the data to the parent via updateWorkout.
     useEffect(() => {
-        const exerciseData = { sets, notes };
+        const convertedSets = sets.map(set => ({
+            weight: set.weight === '' ? 0 : parseFloat(set.weight),
+            reps: set.reps === '' ? 0 : parseInt(set.reps)
+        }));
+        const exerciseData = { exerciseId: exercise.id, sets: convertedSets, notes };
         updateWorkout(exerciseData);
     }, [sets, notes]);
 
     const addSet = () => {
-        setSets([...sets, { reps: '', weight: '' }]);
+        setSets([...sets, { weight: '', reps: '' }]);
     };
 
     const handleInputChange = (index, field, value) => {
@@ -33,9 +37,12 @@ const WorkoutForm = ({ exercise, updateWorkout }) => {
 
     return (
         <>
-            <Form className='mb-3'>
+            <Form className='mb-3 border rounded p-3'>
                 <Form.Group className='mb-3'>
-                    <Form.Label className='fw-bold'>{toTitleCase(exercise.name)} - {toTitleCase(exercise.bodyPart)}</Form.Label>
+                    <div className='d-flex justify-content-between align-items-center mb-3'>
+                        <Form.Label className='fw-bold'>{toTitleCase(exercise.name)} - {toTitleCase(exercise.bodyPart)}</Form.Label>
+                        <Button variant='danger' onClick={removeExercise}>x</Button>
+                    </div>
                     {sets.map((set, index) => (
                         <Row key={index} className='mb-2'>
                             <Col>
