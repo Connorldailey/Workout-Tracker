@@ -5,16 +5,15 @@ import {
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_ROUTINE } from '../utils/mutations';
+import { GET_USER_ROUTINES } from '../utils/queries';
 
-const NewRoutineForm = ({ exercise }) => {
-    // State to hold routine name and description.
+const NewRoutineForm = ({ exercise, closeForm }) => {
     const [newRoutineData, setNewRoutineData] = useState({ name: '', description: '' });
-    // State for displaying a message after submission.
     const [message, setMessage] = useState('');
-    // Mutation for adding a new routine.
-    const [createRoutine, { data, loading, error }] = useMutation(CREATE_ROUTINE);
-    
-    // Handler for input changes.
+    const [createRoutine] = useMutation(CREATE_ROUTINE, {
+        refetchQueries: [{ query: GET_USER_ROUTINES }]
+    });
+
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setNewRoutineData({ ...newRoutineData, [name]: value });
@@ -27,7 +26,6 @@ const NewRoutineForm = ({ exercise }) => {
             .join(' ');
     }
 
-    // Handler for form submission
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -36,7 +34,7 @@ const NewRoutineForm = ({ exercise }) => {
                     input: {
                         name: newRoutineData.name,
                         description: newRoutineData.description,
-                        exercises: [{
+                        exercises: exercise ? [{
                             id: exercise.id,
                             name: exercise.name,
                             bodyPart: exercise.bodyPart,
@@ -45,11 +43,12 @@ const NewRoutineForm = ({ exercise }) => {
                             secondary: exercise.secondary,
                             instructions: exercise.instructions,
                             gifUrl: exercise.gifUrl
-                        }],
+                        }] : [],
                     },
                 },
             });
             setMessage('Routine successfully created.');
+            closeForm(); 
         } catch (error) {
             setMessage('Failed to create routine.');
             console.error('Error creating routine:', error);
@@ -81,7 +80,11 @@ const NewRoutineForm = ({ exercise }) => {
                 />
             </Form.Group>
 
-            <p>Adding Exercise: {toTitleCase(exercise.name)}</p>
+            {exercise ? (
+                <p>Adding Exercise: {toTitleCase(exercise.name)}</p>
+            ) : (
+                <p>No exercise selected.</p>
+            )}
 
             <Button
                 disabled={!(newRoutineData.name && newRoutineData.description)}
@@ -89,11 +92,16 @@ const NewRoutineForm = ({ exercise }) => {
                 variant='success'>
                 Submit
             </Button>
-
-            {/* Display a message based on the mutation result */}
+            <Button
+                className='ms-2'
+                onClick={closeForm}
+                variant='danger'>
+                Cancel
+            </Button>
             {message && <p>{message}</p>}
         </Form>
     );
 };
+
 
 export default NewRoutineForm;

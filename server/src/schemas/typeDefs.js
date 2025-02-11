@@ -53,6 +53,43 @@ const typeDefs = `
         exercises: [ExerciseInput!]!
     }
 
+    type Set {
+        weight: Float!
+        reps: Int!
+    }
+        
+    type WorkoutExercise {
+        exerciseId: String!
+        sets: [Set!]!
+        notes: String
+    }
+
+    type Workout {
+        _id: ID!
+        user: ID!
+        date: String
+        routine: ID!
+        exercises: [WorkoutExercise!]!
+        overallNotes: String!
+    }
+
+    input SetInput {
+        weight: Float!
+        reps: Int!
+    }
+
+    input WorkoutExerciseInput {
+        exerciseId: String!
+        sets: [SetInput!]!
+        notes: String
+    }
+
+    input WorkoutInput {
+        routineId: ID!
+        exercises: [WorkoutExerciseInput!]!
+        overallNotes: String!
+    }
+
     type Query {
         me: User
         exercisesByName(name: String!, offset: Int): [Exercise!]!
@@ -79,6 +116,12 @@ const typeDefs = `
         createRoutine(input: RoutineInput!): Routine!
 
         updateRoutine(routineId: ID!, exercise: ExerciseInput!): Routine!
+
+        deleteRoutine(routineId: ID!): Routine!
+
+        deleteExerciseFromRoutine(routineId: ID!, exerciseId: ID!): Routine!
+
+        addWorkout(input: WorkoutInput!): Workout!
     }
 `;
 

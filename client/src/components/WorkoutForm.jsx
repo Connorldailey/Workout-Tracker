@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 
+// Helper function to convert a string to Title Case.
 const toTitleCase = (str) => {
     return str
         .split(' ')
@@ -8,8 +9,17 @@ const toTitleCase = (str) => {
         .join(' ');
 }
 
-const WorkoutForm = ({ exercise }) => {
+const WorkoutForm = ({ exercise, updateWorkout }) => {
+    // State for sets and notes.
     const [sets, setSets] = useState([{ reps: '', weight: '' }]);
+    const [notes, setNotes] = useState('');
+    
+    // useEffect to update new exercise data whenever sets or notes change,
+    // and then pass the data to the parent via updateWorkout.
+    useEffect(() => {
+        const exerciseData = { sets, notes };
+        updateWorkout(exerciseData);
+    }, [sets, notes]);
 
     const addSet = () => {
         setSets([...sets, { reps: '', weight: '' }]);
@@ -24,8 +34,8 @@ const WorkoutForm = ({ exercise }) => {
     return (
         <>
             <Form className='mb-3'>
-                <Form.Group>
-                    <Form.Label>{toTitleCase(exercise.name)} - {toTitleCase(exercise.bodyPart)}</Form.Label>
+                <Form.Group className='mb-3'>
+                    <Form.Label className='fw-bold'>{toTitleCase(exercise.name)} - {toTitleCase(exercise.bodyPart)}</Form.Label>
                     {sets.map((set, index) => (
                         <Row key={index} className='mb-2'>
                             <Col>
@@ -51,8 +61,17 @@ const WorkoutForm = ({ exercise }) => {
                         Add Set
                     </Button>
                 </Form.Group>
+                <Form.Group>
+                    <Form.Label>Notes:</Form.Label>
+                    <Form.Control
+                        type='text'
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                    />
+                </Form.Group>
             </Form>
         </>
     );
 };
-    export default WorkoutForm;
+    
+export default WorkoutForm;
