@@ -1,10 +1,14 @@
 import express from 'express';
 import path from 'node:path';
+import { fileURLToPath } from 'url';
 import db from './config/connection.js';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas/index.js';
 import { authenticateToken } from './utils/auth.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const server = new ApolloServer({
     typeDefs,
