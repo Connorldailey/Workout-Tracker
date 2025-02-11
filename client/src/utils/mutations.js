@@ -107,3 +107,22 @@ export const ADD_WORKOUT = gql`
         }
     }
 `;
+
+export const REMOVE_EXERCISE = gql`
+    mutation RemoveExercise($routineId: ID!, $exerciseId: ID!) {
+        removeExercise(routineId: $routineId, exerciseId: $exerciseId) {
+            _id
+            name
+            exercises {
+                id
+                name
+                bodyPart
+                equipment
+                target
+                secondary
+                instructions
+                gifUrl
+            }
+        }
+    }
+`;

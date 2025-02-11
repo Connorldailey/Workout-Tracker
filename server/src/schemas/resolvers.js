@@ -258,6 +258,23 @@ const resolvers = {
 
             return newWorkout;
         },
+        removeExercise: async (_, { routineId, exerciseId }) => {
+            try {
+                const updatedRoutine = await Routine.findByIdAndUpdate(
+                    routineId,
+                    { $pull: { exercises: { _id: exerciseId } } }, // Remove exercise by ID
+                    { new: true } // Return updated routine
+                );
+
+                if (!updatedRoutine) {
+                    throw new Error('Routine not found');
+                }
+
+                return updatedRoutine;
+            } catch (error) {
+                throw new Error(`Error removing exercise: ${error.message}`);
+            }
+        },
     },
 };
 
