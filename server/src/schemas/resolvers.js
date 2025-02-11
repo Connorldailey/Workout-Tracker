@@ -1,8 +1,9 @@
-import { Routine, User } from '../models/index.js';
+import { Routine, User, Workout } from '../models/index.js';
 import { signToken, AuthenticationError } from '../utils/auth.js';
 import axios from 'axios';
 import dotenv from 'dotenv';
 import https from 'https';
+import { ObjectId } from 'mongodb'
 
 dotenv.config();
 
@@ -147,6 +148,15 @@ const resolvers = {
 
             return routines;
         },
+        routineById: async (_parent, { routineId }, context) => {
+            if (!context.user) {
+                throw new AuthenticationError('You must be logged in to view your routines.');
+            }
+
+            const routine = await Routine.findOne({ user: context.user._id, _id: routineId });
+
+            return routine;
+        },
         workoutsByUser : async (_parent, _args, context) => {
             if (!context.user) {
                 throw new AuthenticationError('You must be logged in to view your workouts.');
@@ -155,7 +165,7 @@ const resolvers = {
             const workouts = await Workout.find({ user: context.user._id });
 
             return workouts;
-        }
+        },
     },
     Mutation: {
         login: async (_parent, { email, password }) => {
@@ -233,7 +243,21 @@ const resolvers = {
 
             await routine.save();
             return routine;
-        }
+        },
+        addWorkout: async (_parent, { input }, context) => {
+            if (!context.user) {
+                throw new AuthenticationError('You must be logged in to create a routine.');
+            }
+
+            const newWorkout = Workout.create({
+                user: context.user._id,
+                routine: input.routineId,
+                exercises: input.exercises,
+                overallNotes: input.overallNotes
+            });
+
+            return newWorkout;
+        },
     },
 };
 

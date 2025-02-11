@@ -87,3 +87,23 @@ export const DELETE_EXERCISE_FROM_ROUTINE = gql`
         }
     }
 `;
+
+export const ADD_WORKOUT = gql`
+    mutation AddWorkout($input: WorkoutInput!) {
+        addWorkout(input: $input) {
+            _id
+            user
+            date
+            routine
+            exercises {
+                exerciseId
+                sets {
+                    weight
+                    reps
+                }
+                notes
+            }
+            overallNotes
+        }
+    }
+`;

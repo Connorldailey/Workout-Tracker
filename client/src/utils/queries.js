@@ -138,6 +138,28 @@ export const GET_USER_ROUTINES = gql`
         }
     }
 `;
+
+export const GET_ROUTINE_BY_ID = gql`
+    query GetRoutineById($routineId: ID!) {
+        routineById(routineId: $routineId) {
+            _id
+            name
+            description
+            exercises {
+                id
+                name
+                bodyPart
+                equipment
+                target
+                secondary
+                instructions
+                gifUrl
+            }
+            createdAt
+        }
+    }
+`;
+
 export const GET_WORKOUTS = gql`
     query GetWorkouts {
         workoutsByUser {
