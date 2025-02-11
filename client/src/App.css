@@ -1,0 +1,14 @@
+/* Ensure the cover background takes full screen without any padding affecting it */
+.cover-background {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;  /* Full viewport height for the background image */
+  }
+  
+  /* Padding is only applied to the content inside the Outlet */
+  .content-container {
+    padding: 3rem;  /* Adjust padding as necessary */
+  }
+  
