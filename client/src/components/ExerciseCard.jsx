@@ -44,9 +44,9 @@ const ExerciseCard = ({ data }) => {
                             <Card.Body>
                                 <Card.Title>{toTitleCase(exercise.name)}</Card.Title>
                                 <ListGroup variant='flush'>
-                                    <ListGroup.Item>Body Part: {exercise.bodyPart}</ListGroup.Item>
-                                    <ListGroup.Item>Equipment: {exercise.equipment}</ListGroup.Item>
-                                    <ListGroup.Item>Target: {exercise.target}</ListGroup.Item>
+                                    <ListGroup.Item><strong>Body Part: </strong>{toTitleCase(exercise.bodyPart)}</ListGroup.Item>
+                                    <ListGroup.Item><strong>Equipment: </strong>{toTitleCase(exercise.equipment)}</ListGroup.Item>
+                                    <ListGroup.Item><strong>Target: </strong>{toTitleCase(exercise.target)}</ListGroup.Item>
                                 </ListGroup>
                             </Card.Body>
                             <Card.Footer className="bg-white border-0">

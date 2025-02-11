@@ -83,7 +83,7 @@ const NewRoutineForm = ({ exercise, closeForm }) => {
             {exercise ? (
                 <p>Adding Exercise: {toTitleCase(exercise.name)}</p>
             ) : (
-                <p>No exercise selected.</p>
+                <p></p>
             )}
 
             <Button
