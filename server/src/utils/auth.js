@@ -16,7 +16,7 @@ export const authenticateToken = ({ req }) => {
     }
 
     try {
-        const { data } = jwt.verify(token, process.env.JWT_SECRET_KEY || '', { maxAge: '2hr' });
+        const { data } = jwt.verify(token, process.env.JWT_SECRET_KEY || '', { maxAge: '8hr' });
         req.user = data;
     }
     catch (err) {
