@@ -1,6 +1,6 @@
 const HistoryPage = () => {
     return (
-        <p>History Page</p>
+        <h1>History</h1>
     );
 };
 
