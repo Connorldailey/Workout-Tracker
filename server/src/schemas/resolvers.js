@@ -147,6 +147,15 @@ const resolvers = {
 
             return routines;
         },
+        workoutsByUser : async (_parent, _args, context) => {
+            if (!context.user) {
+                throw new AuthenticationError('You must be logged in to view your workouts.');
+            }
+
+            const workouts = await Workout.find({ user: context.user._id });
+
+            return workouts;
+        }
     },
     Mutation: {
         login: async (_parent, { email, password }) => {
