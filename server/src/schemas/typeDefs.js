@@ -123,6 +123,8 @@ const typeDefs = `
         deleteExerciseFromRoutine(routineId: ID!, exerciseId: ID!): Routine!
 
         addWorkout(input: WorkoutInput!): Workout!
+
+        removeExercise(routineId: ID!, exerciseId: ID!): Routine
     }
 `;
 

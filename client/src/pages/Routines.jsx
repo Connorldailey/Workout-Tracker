@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Button, Container, Modal, Spinner, Card, Row, Col } from 'react-bootstrap';
-import { useQuery } from '@apollo/client';
+import { Button, Container, Modal, Spinner, Card, Row, Col, ListGroup } from 'react-bootstrap';
+import { useQuery, useMutation } from '@apollo/client';
 import { GET_USER_ROUTINES } from '../utils/queries';
+import { REMOVE_EXERCISE } from '../utils/mutations';
 import RoutineCard from '../components/RoutineCard';
 import NewRoutineForm from '../components/NewRoutineForm';
 
@@ -14,6 +15,7 @@ const toTitleCase = (str) => {
 
 const RoutinesPage = () => {
     const { data, loading, error } = useQuery(GET_USER_ROUTINES);
+    const [removeExercise] = useMutation(REMOVE_EXERCISE);
     const [selectedRoutine, setSelectedRoutine] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
@@ -33,6 +35,21 @@ const RoutinesPage = () => {
 
     const handleCloseDetails = () => setSelectedRoutine(null);
 
+    const handleDeleteExercise = async (exerciseId) => {
+        try {
+            const { data } = await removeExercise({
+                variables: {
+                    routineId: selectedRoutine._id,
+                    exerciseId: exerciseId,
+                },
+            });
+
+            setSelectedRoutine(data.removeExercise);
+        } catch (error) {
+            console.error('Error deleting exercise:', error);
+        }
+    };
+
     return (
         <>
             <div className="d-flex justify-content-between align-items-center mb-3">
@@ -42,7 +59,6 @@ const RoutinesPage = () => {
                 </Button>
             </div>
 
-            {/* Conditionally render routine list or routine details */}
             {selectedRoutine ? (
                 <Container>
                     <Card className="mb-4">
@@ -56,15 +72,69 @@ const RoutinesPage = () => {
                             </Card.Text>
                             <h5>Exercises:</h5>
                             {selectedRoutine.exercises.length > 0 ? (
-                                <ul>
-                                    {selectedRoutine.exercises.map((exercise, index) => (
-                                        <li key={index}>{toTitleCase(exercise.name)}</li>
+                                <ListGroup>
+                                    {selectedRoutine.exercises.map((exercise) => (
+                                        <ListGroup.Item key={exercise.id} className="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6>{toTitleCase(exercise.name)}</h6>
+                                                <div className="exercise-details">
+                                                    <p><strong>Body Part:</strong> {toTitleCase(exercise.bodyPart)}</p>
+                                                    <p><strong>Equipment:</strong> {toTitleCase(exercise.equipment)}</p>
+                                                    <p><strong>Target:</strong> {toTitleCase(exercise.target)}</p>
+                                                </div>
+
+                                                {/* Button to toggle additional exercise details */}
+                                                <Button
+                                                    variant="info"
+                                                    size="sm"
+                                                    onClick={() => setSelectedRoutine((prevState) => ({
+                                                        ...prevState,
+                                                        exercises: prevState.exercises.map(ex =>
+                                                            ex.id === exercise.id
+                                                                ? { ...ex, showDetails: !ex.showDetails }
+                                                                : ex
+                                                        )
+                                                    }))}
+                                                >
+                                                    {exercise.showDetails ? 'Hide Details' : 'Show Details'}
+                                                </Button>
+
+                                                {/* Conditionally render gifUrl and instructions */}
+                                                {exercise.showDetails && (
+                                                    <div className="mt-2 exercise-details-container">
+                                                        <img src={exercise.gifUrl} alt={exercise.name} className="exercise-gif" />
+                                                        <div className="exercise-instructions">
+                                                            <ul>
+                                                                {typeof exercise.instructions === 'string'
+                                                                    ? exercise.instructions.split('\n').map((instruction, index) => (
+                                                                        <li key={index}>{instruction}</li>
+                                                                    ))
+                                                                    : exercise.instructions.map((instruction, index) => (
+                                                                        <li key={index}>{instruction}</li>
+                                                                    ))
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Delete button */}
+                                            <Button
+                                                variant="danger"
+                                                size="sm"
+                                                onClick={() => handleDeleteExercise(exercise.id)}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </ListGroup.Item>
                                     ))}
-                                </ul>
+                                </ListGroup>
                             ) : (
                                 <p>No exercises added yet.</p>
                             )}
-                            <Button variant="secondary" onClick={handleCloseDetails}>
+
+                            <Button variant="secondary" onClick={handleCloseDetails} className="mt-3">
                                 Back to Routines
                             </Button>
                         </Card.Body>
@@ -86,7 +156,6 @@ const RoutinesPage = () => {
                 </Container>
             )}
 
-            {/* Modal for Creating a New Routine */}
             <Modal show={showModal} onHide={() => setShowModal(false)} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Create New Routine</Modal.Title>
@@ -95,6 +164,42 @@ const RoutinesPage = () => {
                     <NewRoutineForm closeForm={() => setShowModal(false)} />
                 </Modal.Body>
             </Modal>
+
+            {/* CSS Styles */}
+            <style>
+                {`
+                    .exercise-details-container {
+                        display: flex;
+                        align-items: flex-start;
+                        gap: 20px;
+                    }
+
+                    .exercise-gif {
+                        width: 100%;
+                        max-width: 300px;
+                    }
+
+                    .exercise-details {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 5px;
+                        margin-bottom: 10px;
+                    }
+
+                    .exercise-instructions ul {
+                        list-style-type: disc;
+                        padding-left: 20px;
+                    }
+
+                    .exercise-instructions li {
+                        margin-bottom: 5px;
+                    }
+
+                    .exercise-details p {
+                        margin: 0;
+                    }
+                `}
+            </style>
         </>
     );
 };
