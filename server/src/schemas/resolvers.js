@@ -201,21 +201,6 @@ const resolvers = {
 
             return newRoutine;
         },
-        updateRoutine: async (_parent, { routineId, exercise }, context) => {
-            if (!context.user) {
-                throw new AuthenticationError('You must be logged in to update a routine.');
-            }
-
-            const routine = await Routine.findOne({ _id: routineId, user: context.user._id });
-            if (!routine) {
-                throw new Error('Routine not found.')
-            }
-
-            routine.exercises.push(exercise);
-
-            await routine.save();
-            return routine;
-        },
         deleteRoutine: async (_parent, { routineId }, context) => {
             if (!context.user) {
                 throw new AuthenticationError('You must be logged in to delete a routine.');
@@ -226,22 +211,6 @@ const resolvers = {
                 throw new Error('Routine not found.')
             }
 
-            return routine;
-        },
-        deleteExerciseFromRoutine: async (_parent, { routineId, exerciseId }, context) => {
-            if (!context.user) {
-                throw new AuthenticationError('You must be logged in to delete an exercise from a routine.');
-            }
-
-            const routine = await Routine.findOne({ _id: routineId, user: context.user._id });
-            if (!routine) {
-                throw new Error('Routine not found.')
-            }
-
-            const updatedExercises = routine.exercises.filter(exercise => exercise.id !== exerciseId);
-            routine.exercises = updatedExercises;
-
-            await routine.save();
             return routine;
         },
         addWorkout: async (_parent, { input }, context) => {
