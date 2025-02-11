@@ -10,18 +10,19 @@ const RoutineCard = ({ routine, onSelect }) => {
         month: 'long',
         day: 'numeric'
     });
-    const [deleteRoutine] = useMutation(DELETE_ROUTINE, {
+
+    const [deleteRoutine, { loading: deleting }] = useMutation(DELETE_ROUTINE, {
         update: (cache) => {
             const data = cache.readQuery({ query: GET_USER_ROUTINES });
-
-            const updatedRoutines = data.routinesByUser.filter(
-                (existingRoutine) => existingRoutine._id !== routine._id
-            );
-
-            cache.writeQuery({
-                query: GET_USER_ROUTINES,
-                data: { routinesByUser: updatedRoutines },
-            });
+            if (data) {
+                const updatedRoutines = data.routinesByUser.filter(
+                    (existingRoutine) => existingRoutine._id !== routine._id
+                );
+                cache.writeQuery({
+                    query: GET_USER_ROUTINES,
+                    data: { routinesByUser: updatedRoutines },
+                });
+            }
         },
     });
 
@@ -34,23 +35,26 @@ const RoutineCard = ({ routine, onSelect }) => {
     };
 
     return (
-        <Card className="mb-4">
-            <Card.Body>
-                <div className="d-flex justify-content-between align-items-center">
+        <Card className="h-100">
+            <Card.Body className="d-flex flex-column">
+                <div className="d-flex justify-content-between align-items-center mb-2">
                     <Card.Title className="mb-0">{routine.name}</Card.Title>
-                    <Button variant="danger" className="btn-sm ms-1" onClick={handleDeleteRoutine}>
-                        Delete
+                    <Button variant="danger" size="sm" onClick={handleDeleteRoutine} disabled={deleting}>
+                        {deleting ? 'Deleting...' : 'Delete'}
                     </Button>
                 </div>
-                <hr />
                 <Card.Subtitle className="mb-2 text-muted">Created: {formattedDate}</Card.Subtitle>
-                <Card.Text>{routine.description || 'No description available for this routine.'}</Card.Text>
-                <Button variant="primary" onClick={onSelect}>
-                    View Routine
-                </Button>
-                <Button variant="primary" as={Link} to={`/workout/${routine._id}`}>
-                    Start Workout
-                </Button>
+                <Card.Text className="flex-grow-1">
+                    {routine.description || 'No description available.'}
+                </Card.Text>
+                <div className="mt-auto d-flex flex-column gap-2">
+                    <Button variant="primary" onClick={onSelect}>
+                        View Details
+                    </Button>
+                    <Button variant="outline-primary" as={Link} to={`/workout/${routine._id}`}>
+                        Start Workout
+                    </Button>
+                </div>
             </Card.Body>
         </Card>
     );
