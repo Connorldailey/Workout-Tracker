@@ -108,18 +108,19 @@ const WorkoutPage = () => {
                 />
             ))}
             {/* Form for entering overall notes */}
-            <Form className='mb-3'>
-                <Form.Group>
-                    <Form.Label>Overall Notes:</Form.Label>
-                    <Form.Control
-                        type='text'
-                        value={workoutData.overallNotes}
-                        onChange={(e) => setWorkoutData({ ...workoutData, overallNotes: e.target.value })}
-                    />
-                </Form.Group>
-            </Form>
+            <h5 className='fw-bold'>Overall Notes:</h5>
+            <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Enter any notes for this workout..."
+                value={workoutData.overallNotes}
+                onChange={(e) => setWorkoutData({ ...workoutData, overallNotes: e.target.value })}
+                className='mb-4'
+            />
             {/* Button to submit the workout */}
-            <Button onClick={() => endWorkout()}>End Workout</Button>
+            <div className='d-flex justify-content-center'>
+                <Button onClick={() => endWorkout()}>End Workout</Button>
+            </div>
         </>
         
     );

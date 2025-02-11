@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { Form, Button, Row, Col, Card } from 'react-bootstrap';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 // Helper function to convert a string to Title Case.
 const toTitleCase = (str) => {
@@ -29,54 +30,120 @@ const WorkoutForm = ({ exercise, updateWorkout, removeExercise }) => {
         setSets([...sets, { weight: '', reps: '' }]);
     };
 
+    const removeSet = (indexToRemove) => {
+        const updatedSets = sets.filter((_, index) => index !== indexToRemove);
+        setSets(updatedSets);
+    };
+
     const handleInputChange = (index, field, value) => {
         const updatedSets = [...sets];
         updatedSets[index][field] = value;
         setSets(updatedSets);
     };
 
+    // Handle drag end to reorder sets.
+    const handleDragEnd = (result) => {
+        if (!result.destination) return;
+        const reordered = Array.from(sets);
+        const [movedItem] = reordered.splice(result.source.index, 1);
+        reordered.splice(result.destination.index, 0, movedItem);
+        setSets(reordered);
+    };
+
     return (
         <>
-            <Form className='mb-3 border rounded p-3'>
-                <Form.Group className='mb-3'>
-                    <div className='d-flex justify-content-between align-items-center mb-3'>
-                        <Form.Label className='fw-bold'>{toTitleCase(exercise.name)} - {toTitleCase(exercise.bodyPart)}</Form.Label>
-                        <Button variant='danger' onClick={removeExercise}>x</Button>
-                    </div>
-                    {sets.map((set, index) => (
-                        <Row key={index} className='mb-2'>
-                            <Col>
-                                <Form.Control
-                                    type='number'
-                                    placeholder='Weight'
-                                    value={set.weight}
-                                    onChange={(e) => handleInputChange(index, 'weight', e.target.value)}
-                                />
-                            </Col>
-                            x
-                            <Col>
-                                <Form.Control
-                                    type='number'
-                                    placeholder='Reps'
-                                    value={set.reps}
-                                    onChange={(e) => handleInputChange(index, 'reps', e.target.value)}
-                                />
-                            </Col>
-                        </Row>
-                    ))}
-                    <Button variant="secondary" onClick={addSet}>
-                        Add Set
+            <Card className="mb-4 shadow-sm">
+                <Card.Header className="d-flex justify-content-between align-items-center bg-primary text-white">
+                    <Card.Title className="mb-0">
+                        {toTitleCase(exercise.name)} - {toTitleCase(exercise.bodyPart)}
+                    </Card.Title>
+                    <Button variant="outline-light" size="sm" onClick={removeExercise}>
+                        <i className="bi bi-trash"></i>
                     </Button>
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Notes:</Form.Label>
-                    <Form.Control
-                        type='text'
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
-                    />
-                </Form.Group>
-            </Form>
+                </Card.Header>
+                <Card.Body>
+                    <h5 className='fw-bold'>Sets:</h5>
+                    <DragDropContext onDragEnd={handleDragEnd}>
+                        <Droppable droppableId="sets-droppable">
+                            {(provided) => (
+                                <div ref={provided.innerRef} {...provided.droppableProps}>
+                                    {sets.map((set, index) => (
+                                        <Draggable
+                                            key={`set-${index}`}
+                                            draggableId={`set-${index}`}
+                                            index={index}
+                                        >
+                                            {(provided, snapshot) => (
+                                                <Row
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    className={`mb-3 mx-2 align-items-center p-2 rounded border ${snapshot.isDragging ? 'bg-light' : 'bg-white'}`}
+                                                >
+                                                    <Col xs="auto">
+                                                        <span
+                                                            {...provided.dragHandleProps}
+                                                            style={{ cursor: 'grab', fontSize: '1.25rem' }}
+                                                            className="text-secondary"
+                                                        >
+                                                            ☰
+                                                        </span>
+                                                    </Col>
+                                                    <Col>
+                                                        <Form.Control
+                                                            type="number"
+                                                            placeholder="Weight"
+                                                            value={set.weight}
+                                                            onChange={(e) =>
+                                                            handleInputChange(index, 'weight', e.target.value)
+                                                            }
+                                                        />
+                                                    </Col>
+                                                    <Col xs="auto" className="d-flex align-items-center">
+                                                        x
+                                                    </Col>
+                                                    <Col>
+                                                        <Form.Control
+                                                            type="number"
+                                                            placeholder="Reps"
+                                                            value={set.reps}
+                                                            onChange={(e) =>
+                                                            handleInputChange(index, 'reps', e.target.value)
+                                                            }
+                                                        />
+                                                    </Col>
+                                                    <Col xs="auto">
+                                                        <Button variant="danger" size="sm" onClick={() => removeSet(index)}>
+                                                            <i className="bi bi-x-square"></i>
+                                                        </Button>
+                                                    </Col>
+                                                </Row>
+                                            )}
+                                        </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
+
+                    <div className="d-flex justify-content-center mb-3">
+                        <Button variant="secondary" onClick={addSet}>
+                            Add Set
+                        </Button>
+                    </div>
+
+                    <h5 className='fw-bold'>Notes:</h5>
+                    <Form.Group className='m-2'>
+                        <Form.Control
+                                as="textarea"
+                                rows={3}
+                                placeholder="Enter any notes for this exercise..."
+                                value={notes}
+                                onChange={(e) => setNotes(e.target.value)}
+                        />
+                    </Form.Group>
+                </Card.Body>
+            </Card>
         </>
     );
 };
