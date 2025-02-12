@@ -1,13 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { GET_ROUTINE_BY_ID } from '../utils/queries';
 import { Accordion, Card, ListGroup, Spinner } from 'react-bootstrap';
-
-const toTitleCase = (str) => {
-    return str
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-}
+import { toTitleCase } from '../utils/utility';
 
 const WorkoutCard = ({ workout }) => {
     const { data, loading, error } = useQuery(GET_ROUTINE_BY_ID, {

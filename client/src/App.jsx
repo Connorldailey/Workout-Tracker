@@ -24,10 +24,19 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+const jwtExpireRedirect = () => {
+  const token = localStorage.getItem('id_token');
+  if (!token) {
+    window.location.replace('/');
+  }
+};
+
 function App() {
   const location = useLocation();
 
   const isCoverPage = location.pathname === '/';
+
+  jwtExpireRedirect();
 
   return (
     <ApolloProvider client={client}>
