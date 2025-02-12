@@ -5,14 +5,7 @@ import { GET_USER_ROUTINES } from '../utils/queries';
 import { REMOVE_EXERCISE } from '../utils/mutations';
 import RoutineCard from '../components/RoutineCard';
 import NewRoutineForm from '../components/NewRoutineForm';
-
-// Convert a string to title case
-const toTitleCase = (str) => {
-    return str
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-};
+import { toTitleCase } from '../utils/utility';
 
 // Initialize state and queries for routines page
 const RoutinesPage = () => {

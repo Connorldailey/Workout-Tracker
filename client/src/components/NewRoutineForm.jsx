@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_ROUTINE } from '../utils/mutations';
 import { GET_USER_ROUTINES } from '../utils/queries';
+import { toTitleCase } from '../utils/utility';
 
 // Initialize state and mutation for creating a new routine
 const NewRoutineForm = ({ exercise }) => {
@@ -19,14 +20,6 @@ const NewRoutineForm = ({ exercise }) => {
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setNewRoutineData({ ...newRoutineData, [name]: value });
-    }
-
-    // Convert a string to title case
-    const toTitleCase = (str) => {
-        return str
-            .split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
     }
 
     // Handle form submission to create a new routine

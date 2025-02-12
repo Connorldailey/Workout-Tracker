@@ -30,7 +30,7 @@ export const signToken = (username, email, _id) => {
 
     const secretKey = process.env.JWT_SECRET_KEY;
     
-    return jwt.sign({ data: payload }, secretKey, { expiresIn: '2h' });
+    return jwt.sign({ data: payload }, secretKey, { expiresIn: '8hr' });
 };
 
 export class AuthenticationError extends GraphQLError {
