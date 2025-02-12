@@ -44,7 +44,6 @@ const Homepage = () => {
     };
 
     if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error.message}</p>;
 
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
@@ -70,15 +69,15 @@ const Homepage = () => {
                     </div>
 
                     <div style={{ width: '40%', padding: '20px', marginLeft: '2%' }}>
-                        <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-                        <Button
-                            variant="outline-primary"
-                            onClick={handleShow}
-                            className="btn-lg mb-3 mt-1 ms-5 w-100 text-center fw-bold text-uppercase py-3"
-                            style={{ marginLeft: '10%'}}
-                        >
-                            Start Workout
-                        </Button>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                            <Button
+                                variant="outline-primary"
+                                onClick={handleShow}
+                                className="btn-lg mb-3 mt-1 ms-5 w-100 text-center fw-bold text-uppercase py-3"
+                                style={{ marginLeft: '10%' }}
+                            >
+                                Start Workout
+                            </Button>
                         </div>
 
                         {/* Routine Creation Form */}
@@ -151,7 +150,9 @@ const Homepage = () => {
                         </Modal.Body>
                     </Modal>
                 </div>
+
             ) : (
+
                 <div
                     className="d-flex justify-content-center align-items-center vh-100 bg-image"
                     style={{
