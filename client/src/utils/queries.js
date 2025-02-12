@@ -168,7 +168,7 @@ export const GET_WORKOUTS = gql`
             date
             routine
             exercises {
-                exerciseID
+                exerciseId
                 sets {
                     weight
                     reps
