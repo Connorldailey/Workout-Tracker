@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_ROUTINE_BY_ID } from '../utils/queries';
+import { GET_ROUTINE_BY_ID, GET_WORKOUTS } from '../utils/queries';
 import { ADD_WORKOUT } from '../utils/mutations';
 import { Container, Spinner, Alert, Form, Button } from 'react-bootstrap';
 import WorkoutForm from '../components/WorkoutForm';
@@ -19,7 +19,28 @@ const WorkoutPage = () => {
     });
 
     // Mutation for adding/saving a workout to the database.
-    const [addWorkout, { data, loading, error }] = useMutation(ADD_WORKOUT);
+    const [addWorkout, { loading, error }] = useMutation(ADD_WORKOUT, {
+        update(cache, { data: { addWorkout } }) {
+            try {
+                const existingData = cache.readQuery({ query: GET_WORKOUTS });
+                if (existingData && existingData.workoutsByUser) {
+                    cache.writeQuery({
+                        query: GET_WORKOUTS,
+                        data: {
+                            workoutsByUser: [...existingData.workoutsByUser, addWorkout],
+                        },
+                    });
+                } else {
+                    cache.writeQuery({
+                        query: GET_WORKOUTS,
+                        data: { workoutsByUser: [addWorkout] },
+                    });
+                }
+            } catch (error) {
+                console.error('Error updating cache after adding workout:', error);
+            }
+        },
+    });
 
     // State to hold the workout data that will be sent as input for the mutation.
     const [workoutData, setWorkoutData] = useState({
@@ -81,16 +102,20 @@ const WorkoutPage = () => {
         if (!confirmEnd) return; 
 
         console.log("Workout data:", workoutData);
-        await addWorkout({
-            variables: {
-                input: {
-                    routineId: routineId,
-                    exercises: workoutData.exercises,
-                    overallNotes: workoutData.overallNotes
+        try {
+            await addWorkout({
+                variables: {
+                    input: {
+                        routineId: routineId,
+                        exercises: workoutData.exercises,
+                        overallNotes: workoutData.overallNotes
+                    },
                 },
-            },
-        });
-        navigate('/');
+            });
+            navigate('/');
+        } catch (error) {
+            console.error('Error ending workout:', error);
+        }
     };
 
     return (

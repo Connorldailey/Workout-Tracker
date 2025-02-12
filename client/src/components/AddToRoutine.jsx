@@ -41,7 +41,7 @@ const AddToRoutine = ({ exercise }) => {
             setMessage('Exercise added to routine!');
             setMessageType('success');
         } catch (error) {
-            setMessageg(`Error: {mutationError.message}`);
+            setMessage(`Error: ${mutationError.message}`);
             setMessageType('danger');
             console.error('Error adding exercise to routine:', err);
         }   
