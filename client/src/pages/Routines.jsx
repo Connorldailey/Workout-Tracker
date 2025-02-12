@@ -77,11 +77,11 @@ const RoutinesPage = () => {
                                         <ListGroup.Item key={exercise.id} className="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <h6>{toTitleCase(exercise.name)}</h6>
-                                                <div className="exercise-details">
-                                                    <p><strong>Body Part:</strong> {toTitleCase(exercise.bodyPart)}</p>
-                                                    <p><strong>Equipment:</strong> {toTitleCase(exercise.equipment)}</p>
-                                                    <p><strong>Target:</strong> {toTitleCase(exercise.target)}</p>
-                                                </div>
+                                                <Container className='d-flex flex-column column-gap-5px m-2'>
+                                                    <p class="m-0"><strong>Body Part:</strong> {toTitleCase(exercise.bodyPart)}</p>
+                                                    <p class="m-0"><strong>Equipment:</strong> {toTitleCase(exercise.equipment)}</p>
+                                                    <p class="m-0"><strong>Target:</strong> {toTitleCase(exercise.target)}</p>
+                                                </Container>
 
                                                 {/* Button to toggle additional exercise details */}
                                                 <Button
@@ -101,16 +101,16 @@ const RoutinesPage = () => {
 
                                                 {/* Conditionally render gifUrl and instructions */}
                                                 {exercise.showDetails && (
-                                                    <div className="mt-2 exercise-details-container">
-                                                        <img src={exercise.gifUrl} alt={exercise.name} className="exercise-gif" />
-                                                        <div className="exercise-instructions">
-                                                            <ul>
+                                                    <div className="mt-2 d-flex align-items-flex-start gap-1">
+                                                        <img src={exercise.gifUrl} alt={exercise.name} className="width-100%" />
+                                                        <div>
+                                                            <ul className="list-style-type-disc padding-left-20px">
                                                                 {typeof exercise.instructions === 'string'
                                                                     ? exercise.instructions.split('\n').map((instruction, index) => (
                                                                         <li key={index}>{instruction}</li>
                                                                     ))
                                                                     : exercise.instructions.map((instruction, index) => (
-                                                                        <li key={index}>{instruction}</li>
+                                                                        <li className="mb-2" key={index}>{instruction}</li>
                                                                     ))
                                                                 }
                                                             </ul>
@@ -164,42 +164,6 @@ const RoutinesPage = () => {
                     <NewRoutineForm closeForm={() => setShowModal(false)} />
                 </Modal.Body>
             </Modal>
-
-            {/* CSS Styles */}
-            <style>
-                {`
-                    .exercise-details-container {
-                        display: flex;
-                        align-items: flex-start;
-                        gap: 20px;
-                    }
-
-                    .exercise-gif {
-                        width: 100%;
-                        max-width: 300px;
-                    }
-
-                    .exercise-details {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 5px;
-                        margin-bottom: 10px;
-                    }
-
-                    .exercise-instructions ul {
-                        list-style-type: disc;
-                        padding-left: 20px;
-                    }
-
-                    .exercise-instructions li {
-                        margin-bottom: 5px;
-                    }
-
-                    .exercise-details p {
-                        margin: 0;
-                    }
-                `}
-            </style>
         </>
     );
 };
