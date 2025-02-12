@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
+// Initialize state and handle input changes for login form
 const LoginForm = () => {
     const [userFormData, setUserFormData] = useState({ email: '', password: '' });
     const [validated, setValidated] = useState(false);
@@ -22,6 +23,7 @@ const LoginForm = () => {
         setValidated(false);
     };
 
+    // Initialize state and handle input changes for login form
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         setValidated(true);
@@ -37,6 +39,7 @@ const LoginForm = () => {
         setShowAlert(false);
         setValidated(false);
 
+        // Handle login process with mutation, error handling, and state updates
         try {
             const { data } = await loginUser({
                 variables: { email: userFormData.email, password: userFormData.password }

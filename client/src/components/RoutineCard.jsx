@@ -4,6 +4,7 @@ import { DELETE_ROUTINE } from '../utils/mutations';
 import { GET_USER_ROUTINES } from '../utils/queries';
 import { Link } from 'react-router-dom';
 
+// Render routine card with formatted creation date
 const RoutineCard = ({ routine, onSelect }) => {
     const formattedDate = new Date(parseInt(routine.createdAt)).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -11,6 +12,7 @@ const RoutineCard = ({ routine, onSelect }) => {
         day: 'numeric'
     });
 
+    // Render routine card with formatted creation date and delete functionality
     const [deleteRoutine, { loading: deleting }] = useMutation(DELETE_ROUTINE, {
         update: (cache) => {
             const data = cache.readQuery({ query: GET_USER_ROUTINES });
@@ -26,6 +28,7 @@ const RoutineCard = ({ routine, onSelect }) => {
         },
     });
 
+    // Handle routine deletion
     const handleDeleteRoutine = async () => {
         try {
             await deleteRoutine({ variables: { routineId: routine._id } });
@@ -34,6 +37,7 @@ const RoutineCard = ({ routine, onSelect }) => {
         }
     };
 
+    // Render routine card with details, delete button, and action buttons
     return (
         <Card className="h-100">
             <Card.Body className="d-flex flex-column">

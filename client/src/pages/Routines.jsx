@@ -6,6 +6,7 @@ import { REMOVE_EXERCISE } from '../utils/mutations';
 import RoutineCard from '../components/RoutineCard';
 import NewRoutineForm from '../components/NewRoutineForm';
 
+// Convert a string to title case
 const toTitleCase = (str) => {
     return str
         .split(' ')
@@ -13,12 +14,14 @@ const toTitleCase = (str) => {
         .join(' ');
 };
 
+// Initialize state and queries for routines page
 const RoutinesPage = () => {
     const { data, loading, error } = useQuery(GET_USER_ROUTINES);
     const [removeExercise] = useMutation(REMOVE_EXERCISE);
     const [selectedRoutine, setSelectedRoutine] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
+    // Handle loading and error states
     if (loading) {
         return (
             <Container className="text-center my-3">
@@ -33,8 +36,10 @@ const RoutinesPage = () => {
         return <p>Error: {error.message}</p>;
     }
 
+    // Close routine details view
     const handleCloseDetails = () => setSelectedRoutine(null);
 
+    // Handle exercise deletion from routine
     const handleDeleteExercise = async (exerciseId) => {
         try {
             const { data } = await removeExercise({
@@ -50,6 +55,7 @@ const RoutinesPage = () => {
         }
     };
 
+    // Render routines page with routine details, exercise management, and create new routine modal
     return (
         <>
             <div className="d-flex justify-content-between align-items-center mb-3">

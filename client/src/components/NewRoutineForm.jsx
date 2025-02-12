@@ -7,6 +7,7 @@ import { useMutation } from '@apollo/client';
 import { CREATE_ROUTINE } from '../utils/mutations';
 import { GET_USER_ROUTINES } from '../utils/queries';
 
+// Initialize state and mutation for creating a new routine
 const NewRoutineForm = ({ exercise, closeForm }) => {
     const [newRoutineData, setNewRoutineData] = useState({ name: '', description: '' });
     const [message, setMessage] = useState('');
@@ -14,11 +15,13 @@ const NewRoutineForm = ({ exercise, closeForm }) => {
         refetchQueries: [{ query: GET_USER_ROUTINES }]
     });
 
+    // Handle input changes and update form state
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setNewRoutineData({ ...newRoutineData, [name]: value });
     }
 
+    // Convert a string to title case
     const toTitleCase = (str) => {
         return str
             .split(' ')
@@ -26,6 +29,7 @@ const NewRoutineForm = ({ exercise, closeForm }) => {
             .join(' ');
     }
 
+    // Handle form submission to create a new routine
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -55,6 +59,7 @@ const NewRoutineForm = ({ exercise, closeForm }) => {
         }
     }
 
+    // Render form for creating a new routine
     return (
         <Form onSubmit={handleFormSubmit}>
             <Form.Group className='mb-3'>

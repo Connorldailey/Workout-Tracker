@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import { Calendar } from "react-big-calendar";
 
+// Render homepage with different content based on authentication status
 const Homepage = () => {
     return (
         <>
