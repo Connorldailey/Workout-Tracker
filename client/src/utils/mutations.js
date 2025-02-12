@@ -96,7 +96,8 @@ export const ADD_WORKOUT = gql`
             date
             routine
             exercises {
-                exerciseId
+                name
+                bodyPart
                 sets {
                     weight
                     reps

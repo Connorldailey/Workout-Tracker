@@ -59,7 +59,8 @@ const typeDefs = `
     }
         
     type WorkoutExercise {
-        exerciseId: String!
+        name: String!
+        bodyPart: String
         sets: [Set!]!
         notes: String
     }
@@ -70,7 +71,7 @@ const typeDefs = `
         date: String
         routine: ID!
         exercises: [WorkoutExercise!]!
-        overallNotes: String!
+        overallNotes: String
     }
 
     input SetInput {
@@ -79,7 +80,8 @@ const typeDefs = `
     }
 
     input WorkoutExerciseInput {
-        exerciseId: String!
+        name: String!
+        bodyPart: String
         sets: [SetInput!]!
         notes: String
     }
@@ -87,7 +89,7 @@ const typeDefs = `
     input WorkoutInput {
         routineId: ID!
         exercises: [WorkoutExerciseInput!]!
-        overallNotes: String!
+        overallNotes: String
     }
 
     type Query {

@@ -10,7 +10,7 @@ const HistoryPage = () => {
     useEffect(() => {
         if (workoutData && workoutData.workoutsByUser) {
             setWorkoutHistory(workoutData.workoutsByUser);
-            console.log(workoutData.workoutsByUser)
+            console.log(workoutData.workoutsByUser);
         }
     }, [workoutData]);
 
@@ -19,7 +19,7 @@ const HistoryPage = () => {
     
     return (
         <>
-            <h1>History</h1>
+            <h1 className='mb-3'>History</h1>
             {workoutHistory.length ? (
                 workoutHistory.map((workout) => (
                     <WorkoutCard key={workout._id} workout={workout}></WorkoutCard>

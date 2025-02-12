@@ -1,7 +1,13 @@
 import { useQuery } from '@apollo/client';
 import { GET_ROUTINE_BY_ID } from '../utils/queries';
 import { Card } from 'react-bootstrap';
-import ExerciseDetail from './ExerciseDetail';
+
+const toTitleCase = (str) => {
+    return str
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
 
 const WorkoutCard = ({ workout }) => {
     const { data, loading, error } = useQuery(GET_ROUTINE_BY_ID, {
@@ -21,7 +27,7 @@ const WorkoutCard = ({ workout }) => {
 
     return (
         <Card>
-            <Card.Header>
+            <Card.Header className='bg-primary text-white'>
                 <Card.Title>{formattedDate} - {routineData.name || 'Routine deleted.'}</Card.Title>
                 <Card.Subtitle>{routineData.description}</Card.Subtitle>
             </Card.Header>
@@ -29,13 +35,12 @@ const WorkoutCard = ({ workout }) => {
             <Card.Body>
                 {workout.exercises.map((exercise) => (
                     <div key={exercise.exerciseId}>
-                        <p>
-                            <strong>Exercise:</strong>{' '}
-                            <ExerciseDetail exerciseId={exercise.exerciseId} />
-                        </p>
-                        <p>
-                            <strong>Notes:</strong> {exercise.notes}
-                        </p>
+                        <h5>{toTitleCase(exercise.name)}</h5>
+                        <p className='fw-bold'>Sets:</p>
+                        {exercise.sets.map((set, index) => (
+                            <p className='ms-3'>{index + 1}. {set.weight} x {set.reps}</p>
+                        ))}
+                        <p><strong>Notes:</strong> {exercise.notes}</p>
                         {/* Render additional exercise details or sets if needed */}
                     </div>
                 ))}
