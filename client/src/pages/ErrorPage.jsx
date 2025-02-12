@@ -1,8 +1,10 @@
 import { useRouteError, isRouteErrorResponse } from 'react-router-dom';
 
+// Define and export ErrorPage component
 export default function ErrorPage() {
     const error = useRouteError();
 
+    // Render error page for route errors
     if (isRouteErrorResponse(error)) {
         return (
             <div id="error-page">
@@ -16,6 +18,8 @@ export default function ErrorPage() {
     }
 
     console.error(error);
+
+    // Render error page with user-friendly message and error details
     return (
         <div id="error-page">
             <h1>Oops!</h1>

@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client';
 import { SIGNUP_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
+// Initialize state for sign-up form
 const SignupForm = () => {
     const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '' });
     const [validated, setValidated] = useState(false);
@@ -11,8 +12,10 @@ const SignupForm = () => {
     const [ error, setError ] = useState(null);
     const [loading, setLoading] = useState(false);
     
+    // Define mutation for user sign-up
     const [signupUser] = useMutation(SIGNUP_USER);
 
+    // Handle input changes and update form state
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setUserFormData({ ...userFormData, [name]: value });
@@ -22,10 +25,12 @@ const SignupForm = () => {
         setValidated(false);
     };
 
+    // Handle form submission and set validation state
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         setValidated(true);
 
+        // Validate form and update state
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.stopPropagation();
@@ -36,6 +41,7 @@ const SignupForm = () => {
         setShowAlert(false);
         setValidated(false);
 
+        // Handle user sign-up with mutation, error handling, and state updates
         try {
             const { data } = await signupUser({
                 variables: { input: { username: userFormData.username, email: userFormData.email, password: userFormData.password } },
@@ -68,6 +74,7 @@ const SignupForm = () => {
         });
     };
 
+    // Render sign-up form with validation and error handling
     return(
         <>
             <Form noValidate validated={validated} onSubmit={handleFormSubmit}>

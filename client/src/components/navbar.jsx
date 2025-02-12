@@ -5,9 +5,11 @@ import SignUpForm from './signupForm';
 import LoginForm from './loginForm';
 import Auth from '../utils/auth';
 
+// Manage modal visibility state
 const AppNavbar = () => {
     const [showModal, setShowModal] = useState(false);
 
+    // Render Navbar with conditional links based on user authentication and login/signup modal
     return (
         <>
             <Navbar bg='dark' variant='dark' expand='lg'>

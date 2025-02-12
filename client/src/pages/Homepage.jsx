@@ -4,6 +4,7 @@ import backgroundImage from '../assets/—Pngtree—3d rendered gym equipment ag
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 
+// Render homepage with different content based on authentication status
 const Homepage = () => {
     return (
         <>
