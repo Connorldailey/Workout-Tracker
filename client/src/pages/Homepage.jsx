@@ -8,36 +8,30 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useQuery } from '@apollo/client';
 import { GET_USER_ROUTINES } from '../utils/queries';
 import Auth from '../utils/auth';
-import { Button } from 'react-bootstrap';
+import { Button, Container, Modal } from 'react-bootstrap';
 
-// Create localizer for the calendar (you can adjust this to your needs)
 const localizer = momentLocalizer(moment);
 
-// Render homepage with different content based on authentication status
 const Homepage = () => {
     const [events, setEvents] = useState([]);
     const [selectedDate, setSelectedDate] = useState('');
     const [selectedRoutine, setSelectedRoutine] = useState('');
+    const [showModal, setShowModal] = useState(false);
 
-    // Fetch routines using GraphQL query
     const { data, loading, error } = useQuery(GET_USER_ROUTINES);
 
-    // Function to handle adding a new event
     const addEvent = (e) => {
         e.preventDefault();
 
-        // If the user hasn't selected a routine or date, return early
         if (!selectedRoutine || !selectedDate) {
             return;
         }
 
-        // Convert selected date into a moment object for the event
         const start = moment(selectedDate).startOf('day').toDate();
         const end = moment(selectedDate).endOf('day').toDate();
 
-        // Add the new event to the state with the selected routine as the event title
         const newEvent = {
-            title: selectedRoutine,  // Use the selected routine name as event title
+            title: selectedRoutine,
             routine: selectedRoutine,
             start,
             end,
@@ -45,20 +39,21 @@ const Homepage = () => {
 
         setEvents([...events, newEvent]);
 
-        // Clear form after adding event
         setSelectedDate('');
         setSelectedRoutine('');
     };
 
-    // Show loading state or error if data is not available
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
+
+    const handleShow = () => setShowModal(true);
+    const handleClose = () => setShowModal(false);
 
     return (
         <>
             {Auth.loggedIn() ? (
                 <div className="d-flex">
-                    <div style={{ width: '60%', padding: '20px' }}>
+                    <div style={{ width: '50%', padding: '20px' }}>
                         <Calendar
                             localizer={localizer}
                             events={events}
@@ -74,18 +69,20 @@ const Homepage = () => {
                         />
                     </div>
 
-                    <div style={{ width: '30%', padding: '10px' }}>
+                    <div style={{ width: '40%', padding: '20px', marginLeft: '2%' }}>
+                        <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
                         <Button
                             variant="outline-primary"
-                            as={Link}
-                            to={`/workout`} /* Link to the workout page needs prroper use */
-                            className="btn-lg mb-3 mt-1 ms-5 w-100 text-center fw-bold text-uppercase py-3 " 
+                            onClick={handleShow}
+                            className="btn-lg mb-3 mt-1 ms-5 w-100 text-center fw-bold text-uppercase py-3"
+                            style={{ marginLeft: '10%'}}
                         >
                             Start Workout
                         </Button>
+                        </div>
 
-                        {/* Event Creation Form */}
-                        <h4>Add Event</h4>
+                        {/* Routine Creation Form */}
+                        <h4>Build Routine</h4>
                         <form onSubmit={addEvent}>
                             <div className="mb-3">
                                 <label htmlFor="routine" className="form-label">Select Routine</label>
@@ -95,7 +92,7 @@ const Homepage = () => {
                                     value={selectedRoutine}
                                     onChange={(e) => setSelectedRoutine(e.target.value)}
                                     required
-                                    style={{ width: '70%' }}  // 30% shorter width
+                                    style={{ width: '70%' }}
                                 >
                                     <option value="">-- Select Routine --</option>
                                     {data.routinesByUser.map((routine) => (
@@ -116,13 +113,43 @@ const Homepage = () => {
                                     value={selectedDate}
                                     onChange={(e) => setSelectedDate(e.target.value)}
                                     required
-                                    style={{ width: '70%' }}  // 30% shorter width
+                                    style={{ width: '70%' }}
                                 />
                             </div>
 
-                            <button type="submit" className="btn btn-primary">Add Event</button>
+                            <button type="submit" className="btn btn-primary">Add Routine</button>
                         </form>
                     </div>
+                    <Container style={{
+                        position: 'fixed',
+                        bottom: '350px',
+                        right: '300px',
+                        width: 'auto',
+                        fontSize: '1.5rem',
+                    }} >
+                        <h3 className="text-center">Your Recent History</h3>
+                    </Container>
+
+                    {/* Modal for selecting workout routine */}
+                    <Modal show={showModal} onHide={handleClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Select Workout Routine</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            {data.routinesByUser.map((routine) => (
+                                <Button
+                                    key={routine._id}
+                                    variant="outline-primary"
+                                    as={Link}
+                                    to={`/workout/${routine._id}`}
+                                    className="w-100 mb-2"
+                                    onClick={handleClose}
+                                >
+                                    {routine.name}
+                                </Button>
+                            ))}
+                        </Modal.Body>
+                    </Modal>
                 </div>
             ) : (
                 <div
