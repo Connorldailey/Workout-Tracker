@@ -31,6 +31,8 @@ const ExerciseCard = ({ data }) => {
         setExerciseToAdd(exercise);
     }   
 
+    console.log(data)
+
     return (
         <>
             {data && data.length > 0 && data.map((exercise) => (

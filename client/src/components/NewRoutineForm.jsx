@@ -8,7 +8,7 @@ import { CREATE_ROUTINE } from '../utils/mutations';
 import { GET_USER_ROUTINES } from '../utils/queries';
 
 // Initialize state and mutation for creating a new routine
-const NewRoutineForm = ({ exercise, closeForm }) => {
+const NewRoutineForm = ({ exercise }) => {
     const [newRoutineData, setNewRoutineData] = useState({ name: '', description: '' });
     const [message, setMessage] = useState('');
     const [createRoutine] = useMutation(CREATE_ROUTINE, {
@@ -52,7 +52,6 @@ const NewRoutineForm = ({ exercise, closeForm }) => {
                 },
             });
             setMessage('Routine successfully created.');
-            closeForm(); 
         } catch (error) {
             setMessage('Failed to create routine.');
             console.error('Error creating routine:', error);
@@ -94,14 +93,10 @@ const NewRoutineForm = ({ exercise, closeForm }) => {
             <Button
                 disabled={!(newRoutineData.name && newRoutineData.description)}
                 type='submit'
-                variant='success'>
+                variant='success'
+                className='mb-3'
+            >
                 Submit
-            </Button>
-            <Button
-                className='ms-2'
-                onClick={closeForm}
-                variant='danger'>
-                Cancel
             </Button>
             {message && <p>{message}</p>}
         </Form>
