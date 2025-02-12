@@ -66,7 +66,6 @@ const Homepage = () => {
 
         setEvents((prevEvents) => [...prevEvents, newEvent]);
 
-        // Reset form fields
         setSelectedDate('');
         setSelectedRoutine('');
         setStartTime('');
@@ -75,11 +74,9 @@ const Homepage = () => {
 
     // Function to handle event deletion
     const deleteEvent = (eventToDelete) => {
-        // Filter out the event to delete
         const updatedEvents = events.filter(event => event !== eventToDelete);
         setEvents(updatedEvents);
 
-        // Save the updated events to localStorage
         localStorage.setItem('events', JSON.stringify(updatedEvents));
     };
 
@@ -173,6 +170,7 @@ const Homepage = () => {
                                             setStartTime(`${e.target.value}:${minutes}:${ampm}`);
                                         }}
                                         required
+                                        style={{ width: '100px' }}
                                     >
                                         <option value="">-- Hour --</option>
                                         {Array.from({ length: 12 }, (_, i) => (
@@ -192,6 +190,7 @@ const Homepage = () => {
                                             setStartTime(`${hour}:${e.target.value}:${ampm}`);
                                         }}
                                         required
+                                        style={{ width: '110px', maxHeight: '50px', overflowY: 'auto' }}
                                     >
                                         <option value="">-- Minute --</option>
                                         {['00', '15', '30', '45'].map((minute) => (
@@ -211,6 +210,8 @@ const Homepage = () => {
                                             setStartTime(`${hour}:${minutes}:${e.target.value}`);
                                         }}
                                         required
+                                        style={{ width: '50px', maxHeight: '50px', overflowY: 'auto' }}
+
                                     >
                                         <option value="AM">AM</option>
                                         <option value="PM">PM</option>
@@ -232,6 +233,7 @@ const Homepage = () => {
                                             setEndTime(`${e.target.value}:${minutes}:${ampm}`);
                                         }}
                                         required
+                                        style={{ width: '100px', maxHeight: '50px', overflowY: 'auto' }}
                                     >
                                         <option value="">-- Hour --</option>
                                         {Array.from({ length: 12 }, (_, i) => (
@@ -251,6 +253,7 @@ const Homepage = () => {
                                             setEndTime(`${hour}:${e.target.value}:${ampm}`);
                                         }}
                                         required
+                                        style={{ width: '110px', maxHeight: '50px', overflowY: 'auto' }}
                                     >
                                         <option value="">-- Minute --</option>
                                         {['00', '15', '30', '45'].map((minute) => (
@@ -270,6 +273,8 @@ const Homepage = () => {
                                             setEndTime(`${hour}:${minutes}:${e.target.value}`);
                                         }}
                                         required
+                                        style={{ width: '50px', maxHeight: '50px', overflowY: 'auto' }}
+
                                     >
                                         <option value="AM">AM</option>
                                         <option value="PM">PM</option>
