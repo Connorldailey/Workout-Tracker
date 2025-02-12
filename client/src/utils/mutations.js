@@ -127,3 +127,14 @@ export const REMOVE_EXERCISE = gql`
         }
     }
 `;
+
+export const ADD_DATE_TO_ROUTINE = gql`
+    mutation AddDateToRoutine($routineId: ID!, $date: String!) {
+        addDateToRoutine(routineId: $routineId, date: $date) {
+            _id
+            name
+            description
+            date
+        }
+    }
+`;
