@@ -12,12 +12,15 @@ const AddToRoutine = ({ exercise }) => {
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
 
+    // Fetch user routines and define mutation for adding exercise to Routine
     const { data: routineData, loading: loadingRoutines, error: routineError } = useQuery(GET_USER_ROUTINES);
     const [addExerciseToRoutine, { data: mutationData, loading: mutationLoading, error: mutationError }] = useMutation(UPDATE_ROUTINE);
 
+    // Handle loading and error states for fetching routines
     if (loadingRoutines) return <p>Loading routines...</p>;
     if (routineError) return <p>Error: {routineError.message}</p>;
 
+    // Handle adding exercise to routine with mutation and error handling
     const handleAddExercise = async (routineId) => {
         try {
             await addExerciseToRoutine({
@@ -38,12 +41,13 @@ const AddToRoutine = ({ exercise }) => {
             setMessage('Exercise added to routine!');
             setMessageType('success');
         } catch (error) {
-            setMessageg(`Error: {mutationError.message}`);
+            setMessage(`Error: ${mutationError.message}`);
             setMessageType('danger');
             console.error('Error adding exercise to routine:', err);
         }   
     };
 
+    // Render routines with an option to add the exercise to each routine
     return (
         <>
             {routineData && routineData.routinesByUser && routineData.routinesByUser.map((routine) => (

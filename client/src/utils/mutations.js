@@ -96,7 +96,8 @@ export const ADD_WORKOUT = gql`
             date
             routine
             exercises {
-                exerciseId
+                name
+                bodyPart
                 sets {
                     weight
                     reps
@@ -104,6 +105,36 @@ export const ADD_WORKOUT = gql`
                 notes
             }
             overallNotes
+        }
+    }
+`;
+
+export const REMOVE_EXERCISE = gql`
+    mutation RemoveExercise($routineId: ID!, $exerciseId: ID!) {
+        removeExercise(routineId: $routineId, exerciseId: $exerciseId) {
+            _id
+            name
+            exercises {
+                id
+                name
+                bodyPart
+                equipment
+                target
+                secondary
+                instructions
+                gifUrl
+            }
+        }
+    }
+`;
+
+export const ADD_DATE_TO_ROUTINE = gql`
+    mutation AddDateToRoutine($routineId: ID!, $date: String!) {
+        addDateToRoutine(routineId: $routineId, date: $date) {
+            _id
+            name
+            description
+            date
         }
     }
 `;

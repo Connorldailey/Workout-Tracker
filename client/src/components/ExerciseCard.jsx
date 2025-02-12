@@ -11,22 +11,20 @@ import {
 import { useState } from 'react';
 import NewRoutineForm from './NewRoutineForm';
 import AddToRoutine from './AddToRoutine';
+import { toTitleCase } from '../utils/utility';
 
+// Initialize state for modal visibility and selected exercise
 const ExerciseCard = ({ data }) => {
     const [showModal, setShowModal] = useState(false);
     const [exerciseToAdd, setExerciseToAdd] = useState({});
 
-    const toTitleCase = (str) => {
-        return str
-            .split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
-    }
-
+    // Show modal and set selected exercise
     const handleAddToRoutine =  (exercise) => {
         setShowModal(true);
         setExerciseToAdd(exercise);
     }   
+
+    console.log(data)
 
     return (
         <>

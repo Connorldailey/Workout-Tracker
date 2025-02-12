@@ -18,7 +18,11 @@ const routineSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    date: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 const Routine = model('Routine', routineSchema);

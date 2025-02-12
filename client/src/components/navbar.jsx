@@ -5,26 +5,29 @@ import SignUpForm from './signupForm';
 import LoginForm from './loginForm';
 import Auth from '../utils/auth';
 
+// Manage modal visibility state
 const AppNavbar = () => {
     const [showModal, setShowModal] = useState(false);
 
+    // Render Navbar with conditional links based on user authentication and login/signup modal
     return (
         <>
-            <Navbar bg='dark' variant='dark' expand='lg'>
+            <Navbar bg='dark' variant='dark' expand='md'>
                 <Container fluid>
                     <Navbar.Brand as={Link} to='/'>
                         Workout Tracker
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls='navbar' />
-                    <Navbar.Collapse id='navbar' className='d-flex flex-row-reverse'>
+                    <Navbar.Collapse id='navbar'>
                         <Nav className='ms-auto d-flex'>
                             {Auth.loggedIn() ? (
-                                <>
+                                <div className='d-flex flex-column flex-md-row align-items-center'>
+                                    <Nav.Link as={Link} to='/'>Home</Nav.Link>
                                     <Nav.Link as={Link} to='/explore'>Explore</Nav.Link>
                                     <Nav.Link as={Link} to='/routines'>Routines</Nav.Link>
                                     <Nav.Link as={Link} to='/history'>History</Nav.Link>
                                     <Nav.Link onClick={Auth.logout}>Logout</Nav.Link>
-                                </>
+                                </div>
                             ) : (
                                 <Nav.Link onClick={() => setShowModal(true)}>Login/Sign Up</Nav.Link>
                             )}

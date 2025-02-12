@@ -12,9 +12,12 @@ const setSchema = new Schema({
 });
 
 const workoutExerciseSchema = new Schema({
-    exerciseId: {
+    name: {
         type: String,
         required: true,
+    },
+    bodyPart: {
+        type: String,
     },
     sets: [setSchema],
     notes: {

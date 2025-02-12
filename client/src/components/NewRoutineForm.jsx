@@ -6,26 +6,23 @@ import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_ROUTINE } from '../utils/mutations';
 import { GET_USER_ROUTINES } from '../utils/queries';
+import { toTitleCase } from '../utils/utility';
 
-const NewRoutineForm = ({ exercise, closeForm }) => {
+// Initialize state and mutation for creating a new routine
+const NewRoutineForm = ({ exercise }) => {
     const [newRoutineData, setNewRoutineData] = useState({ name: '', description: '' });
     const [message, setMessage] = useState('');
     const [createRoutine] = useMutation(CREATE_ROUTINE, {
         refetchQueries: [{ query: GET_USER_ROUTINES }]
     });
 
+    // Handle input changes and update form state
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setNewRoutineData({ ...newRoutineData, [name]: value });
     }
 
-    const toTitleCase = (str) => {
-        return str
-            .split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
-    }
-
+    // Handle form submission to create a new routine
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -48,13 +45,13 @@ const NewRoutineForm = ({ exercise, closeForm }) => {
                 },
             });
             setMessage('Routine successfully created.');
-            closeForm(); 
         } catch (error) {
             setMessage('Failed to create routine.');
             console.error('Error creating routine:', error);
         }
     }
 
+    // Render form for creating a new routine
     return (
         <Form onSubmit={handleFormSubmit}>
             <Form.Group className='mb-3'>
@@ -89,14 +86,10 @@ const NewRoutineForm = ({ exercise, closeForm }) => {
             <Button
                 disabled={!(newRoutineData.name && newRoutineData.description)}
                 type='submit'
-                variant='success'>
+                variant='success'
+                className='mb-3'
+            >
                 Submit
-            </Button>
-            <Button
-                className='ms-2'
-                onClick={closeForm}
-                variant='danger'>
-                Cancel
             </Button>
             {message && <p>{message}</p>}
         </Form>

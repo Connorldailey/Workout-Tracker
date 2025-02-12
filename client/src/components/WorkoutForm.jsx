@@ -1,14 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Form, Button, Row, Col, Card } from 'react-bootstrap';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-
-// Helper function to convert a string to Title Case.
-const toTitleCase = (str) => {
-    return str
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-}
+import { toTitleCase } from '../utils/utility';
 
 const WorkoutForm = ({ exercise, updateWorkout, removeExercise }) => {
     // State for sets and notes.
@@ -22,9 +15,11 @@ const WorkoutForm = ({ exercise, updateWorkout, removeExercise }) => {
             weight: set.weight === '' ? 0 : parseFloat(set.weight),
             reps: set.reps === '' ? 0 : parseInt(set.reps)
         }));
-        const exerciseData = { exerciseId: exercise.id, sets: convertedSets, notes };
+        const exerciseData = { name: exercise.name, bodyPart: exercise.bodyPart, sets: convertedSets, notes };
         updateWorkout(exerciseData);
     }, [sets, notes]);
+
+    console.log(exercise)
 
     const addSet = () => {
         setSets([...sets, { weight: '', reps: '' }]);

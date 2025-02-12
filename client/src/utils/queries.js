@@ -168,7 +168,8 @@ export const GET_WORKOUTS = gql`
             date
             routine
             exercises {
-                exerciseID
+                name
+                bodyPart
                 sets {
                     weight
                     reps
@@ -176,6 +177,17 @@ export const GET_WORKOUTS = gql`
                 notes
             }
             overallNotes
+        }
+    }
+`;
+
+export const GET_ROUTINES_BY_DATE = gql`
+    query GetRoutinesByDate($date: String!) {
+        routinesByDate(date: $date) {
+            _id
+            name
+            description
+            date
         }
     }
 `;
