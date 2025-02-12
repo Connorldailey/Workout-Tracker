@@ -22,9 +22,11 @@ const WorkoutForm = ({ exercise, updateWorkout, removeExercise }) => {
             weight: set.weight === '' ? 0 : parseFloat(set.weight),
             reps: set.reps === '' ? 0 : parseInt(set.reps)
         }));
-        const exerciseData = { exerciseId: exercise.id, sets: convertedSets, notes };
+        const exerciseData = { name: exercise.name, bodyPart: exercise.bodyPart, sets: convertedSets, notes };
         updateWorkout(exerciseData);
     }, [sets, notes]);
+
+    console.log(exercise)
 
     const addSet = () => {
         setSets([...sets, { weight: '', reps: '' }]);
