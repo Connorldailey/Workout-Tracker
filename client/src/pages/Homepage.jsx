@@ -3,19 +3,28 @@ import React from 'react';
 import backgroundImage from '../assets/—Pngtree—3d rendered gym equipment against_11966449.jpg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
+import { Calendar } from "react-big-calendar";
 
 const Homepage = () => {
     return (
         <>
             {Auth.loggedIn() ? (
                 <>
-                    <div>
+                    <div 
+                        className="d-flex justify-content-center align-items-center mb-3 border-dark"
+                        style={{
+                            margin: '10px',
+                        }}>
                         <p>Agenda of Workouts for the Week</p>
-                    </div>
-                    <Link to='/WorkoutLog'>
-                        <button className="button">Start Workout</button>
+                        <Link to='/WorkoutLog' 
+                         style={{
+                            margin: '10px',
+                        }}>
+                            <button className="button">Start Workout</button>
                     </Link>
-                    <div>
+                    </div>
+                    <div
+                    className="d-flex justify-content-between align-items-center mb-3">
                         <p>Last 5 recorded workouts</p>
                     </div>
                 </>
