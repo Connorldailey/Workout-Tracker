@@ -237,19 +237,24 @@ const resolvers = {
             }
         },
         updateRoutine: async (_parent, { routineId, exercise }, context) => {
-            if (!context.user) {
-                throw new AuthenticationError('You must be logged in to update a routine.');
-            }
-
-            const routine = await Routine.findOne({ _id: routineId, user: context.user._id });
-            if (!routine) {
-                throw new Error('Routine not found.')
-            }
-
-            routine.exercises.push(exercise);
-
-            await routine.save();
-            return routine;
+            try {
+                if (!context.user) {
+                    throw new AuthenticationError('You must be logged in to update a routine.');
+                }
+    
+                const routine = await Routine.findOne({ _id: routineId, user: context.user._id });
+                if (!routine) {
+                    throw new Error('Routine not found.')
+                }
+    
+                routine.exercises.push(exercise);
+    
+                await routine.save();
+                return routine;
+            } catch (error) {
+                console.error('Error updating routine:', error);
+                throw new Error('Failed to update routine.');
+            }  
         },
         deleteRoutine: async (_parent, { routineId }, context) => {
             try {
