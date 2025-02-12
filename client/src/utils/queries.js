@@ -179,3 +179,14 @@ export const GET_WORKOUTS = gql`
         }
     }
 `;
+
+export const GET_ROUTINES_BY_DATE = gql`
+    query GetRoutinesByDate($date: String!) {
+        routinesByDate(date: $date) {
+            _id
+            name
+            description
+            date
+        }
+    }
+`;

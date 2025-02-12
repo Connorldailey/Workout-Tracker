@@ -197,6 +197,7 @@ const resolvers = {
                 name: input.name,
                 description: input.description,
                 exercises: input.exercises,
+                date: input.date
             });
 
             return newRoutine;
