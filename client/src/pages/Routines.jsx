@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Container, Modal, Spinner, Card, Row, Col, ListGroup } from 'react-bootstrap';
+import { Button, Container, Modal, Spinner, Card, Row, Col, ListGroup, Accordion } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_USER_ROUTINES } from '../utils/queries';
 import { REMOVE_EXERCISE } from '../utils/mutations';
@@ -31,6 +31,8 @@ const RoutinesPage = () => {
             </Container>
         );
     }
+
+    console.log(selectedRoutine)
 
     if (error) {
         return <p>Error: {error.message}</p>;
@@ -64,82 +66,81 @@ const RoutinesPage = () => {
                     Create New Routine
                 </Button>
             </div>
-
+      
             {selectedRoutine ? (
                 <Container>
-                    <Card className="mb-4">
-                        <Card.Body>
+                    <Card className="mb-4 shadow-sm">
+                        <Card.Header className="p-3">
                             <Card.Title>{selectedRoutine.name}</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted">
                                 Created: {new Date(parseInt(selectedRoutine.createdAt)).toLocaleDateString()}
                             </Card.Subtitle>
+                        </Card.Header>
+                        <Card.Body>
                             <Card.Text>
                                 {selectedRoutine.description || 'No description available.'}
                             </Card.Text>
-                            <h5>Exercises:</h5>
+                            <h5 className="mt-4">Exercises:</h5>
                             {selectedRoutine.exercises.length > 0 ? (
-                                <ListGroup>
+                                <Accordion>
                                     {selectedRoutine.exercises.map((exercise) => (
-                                        <ListGroup.Item key={exercise.id} className="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h6>{toTitleCase(exercise.name)}</h6>
-                                                <Container className='d-flex flex-column column-gap-5px m-2'>
-                                                    <p class="m-0"><strong>Body Part:</strong> {toTitleCase(exercise.bodyPart)}</p>
-                                                    <p class="m-0"><strong>Equipment:</strong> {toTitleCase(exercise.equipment)}</p>
-                                                    <p class="m-0"><strong>Target:</strong> {toTitleCase(exercise.target)}</p>
+                                        <Accordion.Item
+                                            eventKey={`${exercise.id}`}
+                                            key={exercise.id}
+                                            className="mb-2"
+                                        >
+                                            <Accordion.Header>{toTitleCase(exercise.name)}</Accordion.Header>
+                                            <Accordion.Body>
+                                                <Container className="mb-2">
+                                                    <p className="m-0">
+                                                        <strong>Body Part:</strong> {toTitleCase(exercise.bodyPart)}
+                                                    </p>
+                                                    <p className="m-0">
+                                                        <strong>Equipment:</strong> {toTitleCase(exercise.equipment)}
+                                                    </p>
+                                                    <p className="m-0">
+                                                        <strong>Target:</strong> {toTitleCase(exercise.target)}
+                                                    </p>
                                                 </Container>
-
-                                                {/* Button to toggle additional exercise details */}
-                                                <Button
-                                                    variant="info"
-                                                    size="sm"
-                                                    onClick={() => setSelectedRoutine((prevState) => ({
-                                                        ...prevState,
-                                                        exercises: prevState.exercises.map(ex =>
-                                                            ex.id === exercise.id
-                                                                ? { ...ex, showDetails: !ex.showDetails }
-                                                                : ex
-                                                        )
-                                                    }))}
-                                                >
-                                                    {exercise.showDetails ? 'Hide Details' : 'Show Details'}
-                                                </Button>
-
-                                                {/* Conditionally render gifUrl and instructions */}
-                                                {exercise.showDetails && (
-                                                    <div className="mt-2 d-flex align-items-flex-start gap-1">
-                                                        <img src={exercise.gifUrl} alt={exercise.name} className="width-100%" />
-                                                        <div>
-                                                            <ul className="list-style-type-disc padding-left-20px">
-                                                                {typeof exercise.instructions === 'string'
-                                                                    ? exercise.instructions.split('\n').map((instruction, index) => (
-                                                                        <li key={index}>{instruction}</li>
-                                                                    ))
-                                                                    : exercise.instructions.map((instruction, index) => (
-                                                                        <li className="mb-2" key={index}>{instruction}</li>
-                                                                    ))
-                                                                }
-                                                            </ul>
-                                                        </div>
+                        
+                                                {exercise.gifUrl && (
+                                                    <div className="mb-2">
+                                                        <img
+                                                            src={exercise.gifUrl}
+                                                            alt={exercise.name}
+                                                            className="img-fluid rounded"
+                                                        />
                                                     </div>
                                                 )}
-                                            </div>
-
-                                            {/* Delete button */}
-                                            <Button
-                                                variant="danger"
-                                                size="sm"
-                                                onClick={() => handleDeleteExercise(exercise.id)}
-                                            >
-                                                Delete
-                                            </Button>
-                                        </ListGroup.Item>
+                        
+                                                {exercise.instructions && (
+                                                    <div>
+                                                        <h6>Instructions:</h6>
+                                                        <ol>
+                                                            {exercise.instructions.map((instruction, idx) => (
+                                                                <li className='ps-3' key={idx}>{instruction}</li>
+                                                            ))}
+                                                        </ol>
+                                                    </div>
+                                                )}
+                        
+                                                <div className="mt-3">
+                                                    <Button
+                                                        variant="danger"
+                                                        size="sm"
+                                                        onClick={() => handleDeleteExercise(exercise.id)}
+                                                    >
+                                                        Delete
+                                                    </Button>
+                                                </div>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
                                     ))}
-                                </ListGroup>
+                                </Accordion>
                             ) : (
                                 <p>No exercises added yet.</p>
                             )}
-
+                
                             <Button variant="secondary" onClick={handleCloseDetails} className="mt-3">
                                 Back to Routines
                             </Button>
@@ -161,7 +162,7 @@ const RoutinesPage = () => {
                     )}
                 </Container>
             )}
-
+      
             <Modal show={showModal} onHide={() => setShowModal(false)} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Create New Routine</Modal.Title>
@@ -171,7 +172,7 @@ const RoutinesPage = () => {
                 </Modal.Body>
             </Modal>
         </>
-    );
+      );
 };
 
 export default RoutinesPage;
