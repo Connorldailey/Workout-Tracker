@@ -1,7 +1,16 @@
 import { useQuery } from '@apollo/client';
 import { useState, useEffect } from 'react';
 import { GET_WORKOUTS } from '../utils/queries';
+import { Accordion } from 'react-bootstrap';
 import WorkoutCard from '../components/WorkoutCard';
+
+const formatDate = (dateStr) => {
+    return new Date(parseInt(dateStr)).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    })
+};
 
 const HistoryPage = () => {
     const [workoutHistory, setWorkoutHistory] = useState([]);
@@ -10,7 +19,6 @@ const HistoryPage = () => {
     useEffect(() => {
         if (workoutData && workoutData.workoutsByUser) {
             setWorkoutHistory(workoutData.workoutsByUser);
-            console.log(workoutData.workoutsByUser);
         }
     }, [workoutData]);
 
@@ -21,8 +29,11 @@ const HistoryPage = () => {
         <>
             <h1 className='mb-3'>History</h1>
             {workoutHistory.length ? (
-                workoutHistory.map((workout) => (
-                    <WorkoutCard key={workout._id} workout={workout}></WorkoutCard>
+                workoutHistory.slice(0).reverse().map((workout) => (
+                    <div key={workout._id}>
+                        <h5>{formatDate(workout.date)}</h5>
+                        <WorkoutCard workout={workout} />
+                    </div>
                 ))
             ) : (
                 <p>No workouts found.</p>

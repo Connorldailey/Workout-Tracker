@@ -104,7 +104,7 @@ const ExplorePage = () => {
     // Handler for changing pages in the pagination.
     const handlePageChange = (newPageIndex) => {
         setPageIndex(newPageIndex);
-        const offset = newPageIndex * 2;
+        const offset = newPageIndex * 10;
         if (searchType === 'name') {
             searchExercisesByName({ variables: { name: searchText, offset } });
         } else if (searchType === 'target') {
