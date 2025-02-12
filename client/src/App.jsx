@@ -2,6 +2,7 @@ import './App.css';
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { Outlet, useLocation } from 'react-router-dom';
+// import jwt_decode from 'jwt-decode';
 
 import Navbar from './components/navbar';
 
@@ -24,19 +25,25 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const jwtExpireRedirect = () => {
-  const token = localStorage.getItem('id_token');
-  if (!token) {
-    window.location.replace('/');
-  }
-};
+// const whenJWTExpires = () => {
+//   const token = localStorage.getItem('id_token');
+//   if (!token) {
+//     return;
+//   }
+//   const decodedToken = jwt_decode(token);
+//   const currentTime = Date.now() / 1000;
+//   if (decodedToken.exp < currentTime) {
+//     localStorage.removeItem('id_token');
+//     window.location.replace('/');
+//   }
+// };
 
 function App() {
   const location = useLocation();
 
   const isCoverPage = location.pathname === '/';
 
-  jwtExpireRedirect();
+  // whenJWTExpires();
 
   return (
     <ApolloProvider client={client}>

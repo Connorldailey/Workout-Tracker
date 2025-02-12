@@ -12,6 +12,7 @@ import { toTitleCase } from '../utils/utility';
 const NewRoutineForm = ({ exercise }) => {
     const [newRoutineData, setNewRoutineData] = useState({ name: '', description: '' });
     const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState('');
     const [createRoutine] = useMutation(CREATE_ROUTINE, {
         refetchQueries: [{ query: GET_USER_ROUTINES }]
     });
@@ -45,8 +46,10 @@ const NewRoutineForm = ({ exercise }) => {
                 },
             });
             setMessage('Routine successfully created.');
+            setMessageType('success');
         } catch (error) {
             setMessage('Failed to create routine.');
+            setMessageType('danger');
             console.error('Error creating routine:', error);
         }
     }
@@ -91,7 +94,11 @@ const NewRoutineForm = ({ exercise }) => {
             >
                 Submit
             </Button>
-            {message && <p>{message}</p>}
+            {message && (
+                <div className={`alert alert-${messageType} mt-3 text-center `} role="alert">
+                    {message}
+                </div>
+            )}
         </Form>
     );
 };
